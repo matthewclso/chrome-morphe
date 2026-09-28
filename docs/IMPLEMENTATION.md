@@ -8,7 +8,7 @@ exact descriptors, call counts and resource IDs validate the supported artifact.
 
 A resource patch adds a native Preference entry to MainSettings, opening a private, non-exported MorpheSettingsActivity.
 The four switches use one SharedPreferences file, `chrome_patch`. The Incognito-default key is preserved from the prototype.
-The theme picker and settings page share the Black mode key. Hiding the toolbar button never hides the settings entry.
+Black mode is controlled only from Morphe settings. Hiding the toolbar button never hides the settings entry.
 
 The application hook initializes only the browser's main process. Application context is retained, activities are weakly
 tracked, and appearance changes recreate an existing activity on return so native backgrounds/layout can be restored.
@@ -36,14 +36,14 @@ reserves the measured toolbar/search height. Layout changes recalculate that res
 
 ## Black theme
 
-Black chooses Chrome's existing dark configuration plus an independent palette flag. Chrome's Theme screen contains a
-fourth radio choice and its Appearance summary reports Black. Selecting a native theme clears that flag; Black → Dark
-also recreates the settings activity because both modes otherwise share the same native dark setting.
+Black chooses Chrome's existing dark configuration plus an independent palette flag. Chrome's Theme screen retains
+its original System default, Light and Dark choices. Selecting a native theme clears the Black flag so native theme
+choices remain effective. The Morphe switch is the sole Black-mode control.
 
 Dark neutral backgrounds map to #000000, including translucent fills composited over black; accent colors, text colors and rendered websites are not globally
 recolored. Hooks cover native background/tint setters and ToolbarPhone's background palette, with a layout pass for
 XML-created background drawables and the Discover card's rounded background paint. Super dispatch is preserved to avoid recursively re-entering overridden setters.
-Stateful background palettes retain their state specifications and ordering using the validated [Android 16 ColorStateList parcel format](https://github.com/aosp-mirror/platform_frameworks_base/blob/android16-release/core/java/android/content/res/ColorStateList.java); an unrecognized format is left unchanged. The flag gates all transforms; activity recreation restores original drawables when disabled.
+Stateful background palettes retain their state specifications and ordering using the validated [Android 16 ColorStateList parcel format](https://github.com/aosp-mirror/platform_frameworks_base/blob/android16-release/core/java/android/content/res/ColorStateList.java); an unrecognized format is left unchanged. Popup windows are normalized through their own content tree because they are outside the Activity decor tree. The flag gates all transforms; activity recreation restores original drawables when disabled.
 
 ## Packaging and provenance
 

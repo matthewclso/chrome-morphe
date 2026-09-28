@@ -14,8 +14,8 @@ Stock Chrome and the Samsung Internet default-browser role are not fixtures.
 | True bottom off | Native new-tab toolbar and Hub controls return to their original top positions. |
 | True bottom on | New-tab/address editing field stays below content; Hub action row, mode/group selector, menu and search move below the tab grid. |
 | Active tab search | Field above Gboard, results above the field; accessible bounds do not overlap. |
-| Native Theme screen | System default, Light, Dark and Black choices; Black also updates the Appearance summary. |
-| Black → Dark | Restores gray backgrounds; selecting Light also disables Black. |
+| Native Theme screen | System default, Light and Dark choices remain; Black is controlled only from Morphe settings. |
+| Black off / native Light | Restores Chrome’s native theme; selecting Light also disables Black. |
 | Black palette | Pixel checks cover the toolbar, address field, NTP controls and settings page. Text and prominent accents remain visible. |
 | Morphe back button | Transparent idle background matches the surrounding page, including #000000 in Black mode. |
 | Native new-tab visibility | Unchanged, as requested. |

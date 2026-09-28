@@ -99,11 +99,6 @@ val settingsPatch = bytecodePatch(
             iget-object p0, p0, $radioClass->K0:Ljava/util/ArrayList;
             return-object p0
         """.trimIndent())
-        bridge.methods.single { it.name == "setThemeRadioChecked" }.addInstructions(0, """
-            check-cast p0, Lorg/chromium/components/browser_ui/widget/RadioButtonWithDescription;
-            invoke-virtual {p0, p1}, Lorg/chromium/components/browser_ui/widget/RadioButtonWithDescription;->g(Z)V
-            return-void
-        """.trimIndent())
         val radio = mutableClassDefBy(radioClass)
         val bind = radio.methods.single { it.name == "C" && it.parameterTypes == listOf("Lvwk;") }
         // This exact method keeps p0 as the preference and has one fall-through return.
@@ -113,19 +108,6 @@ val settingsPatch = bytecodePatch(
         bind.addInstructions(0, "invoke-static {}, $THEME_PICKER->beginBinding()V")
         radio.methods.single { it.name == "onCheckedChanged" }.addInstructions(0,
             "invoke-static/range {p0 .. p0}, $THEME_PICKER->nativeChoice(Ljava/lang/Object;)V")
-        val appearance = mutableClassDefBy("Lorg/chromium/chrome/browser/appearance/settings/AppearanceSettingsFragment;")
-            .methods.single { it.name == "U1" && it.hasString("ui_theme") }
-        val summaryCall = appearance.implementation!!.instructions.withIndex().single { (_, instruction) ->
-            ((instruction as? ReferenceInstruction)?.reference as? MethodReference)?.toString() == "Ldqh;->b(Landroid/content/Context;I)Ljava/lang/String;"
-        }.index
-        val summaryResult = appearance.implementation!!.instructions[summaryCall + 1]
-        check(summaryResult.opcode == Opcode.MOVE_RESULT_OBJECT)
-        val summaryRegister = (summaryResult as OneRegisterInstruction).registerA
-        appearance.addInstructions(summaryCall + 2, """
-            invoke-static/range {v$summaryRegister .. v$summaryRegister}, $THEME_PICKER->summary(Ljava/lang/String;)Ljava/lang/String;
-            move-result-object v$summaryRegister
-        """.trimIndent())
-
         val hub = mutableClassDefBy("Lorg/chromium/chrome/browser/hub/HubToolbarView;")
         val inflate = hub.methods.single { it.name == "onFinishInflate" }
         val superCall = inflate.implementation!!.instructions.indexOfFirst { it.opcode == Opcode.INVOKE_SUPER }
@@ -169,6 +151,15 @@ val settingsPatch = bytecodePatch(
                         if (instruction.opcode != Opcode.INVOKE_VIRTUAL && instruction.opcode != Opcode.INVOKE_VIRTUAL_RANGE) continue
                         val ref = (instruction as? ReferenceInstruction)?.reference as? MethodReference ?: continue
                         val target = when {
+                            ref.definingClass == "Landroid/widget/PopupWindow;" && ref.name == "showAtLocation" &&
+                                ref.parameterTypes == listOf("Landroid/view/View;", "I", "I", "I") ->
+                                "showAtLocation(Landroid/widget/PopupWindow;Landroid/view/View;III)V"
+                            ref.definingClass == "Landroid/widget/PopupWindow;" && ref.name == "showAsDropDown" &&
+                                ref.parameterTypes == listOf("Landroid/view/View;", "I", "I") ->
+                                "showAsDropDown(Landroid/widget/PopupWindow;Landroid/view/View;II)V"
+                            ref.definingClass == "Landroid/widget/PopupWindow;" && ref.name == "showAsDropDown" &&
+                                ref.parameterTypes == listOf("Landroid/view/View;", "I", "I", "I") ->
+                                "showAsDropDown(Landroid/widget/PopupWindow;Landroid/view/View;III)V"
                             ref.name == "setBackgroundColor" && ref.parameterTypes == listOf("I") &&
                                 (ref.definingClass == "Landroid/view/View;" || ref.definingClass.startsWith("Landroid/widget/")) ->
                                 "setBackgroundColor(Landroid/view/View;I)V"
@@ -191,12 +182,14 @@ val settingsPatch = bytecodePatch(
                         } ?: continue
                         val call = when (instruction) {
                             is FiveRegisterInstruction -> {
-                                check(instruction.registerCount == 2)
-                                "invoke-static {v${instruction.registerC}, v${instruction.registerD}}, $BLACK_THEME->$target"
+                                check(instruction.registerCount == ref.parameterTypes.size + 1)
+                                val registers = listOf(instruction.registerC, instruction.registerD, instruction.registerE,
+                                    instruction.registerF, instruction.registerG).take(instruction.registerCount).joinToString { "v$it" }
+                                "invoke-static {$registers}, $BLACK_THEME->$target"
                             }
                             is RegisterRangeInstruction -> {
-                                check(instruction.registerCount == 2)
-                                "invoke-static/range {v${instruction.startRegister} .. v${instruction.startRegister + 1}}, $BLACK_THEME->$target"
+                                check(instruction.registerCount == ref.parameterTypes.size + 1)
+                                "invoke-static/range {v${instruction.startRegister} .. v${instruction.startRegister + instruction.registerCount - 1}}, $BLACK_THEME->$target"
                             }
                             else -> error("Unexpected background call: $ref")
                         }
@@ -209,6 +202,6 @@ val settingsPatch = bytecodePatch(
             }
         }
         check(backgrounds > 100)
-        println("Settings, native theme picker and Hub hooks applied; $backgrounds background color calls gated.")
+        println("Settings, native theme observer and Hub hooks applied; $backgrounds background color calls gated.")
     }
 }

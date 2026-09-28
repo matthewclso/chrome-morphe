@@ -15,7 +15,6 @@ public final class NativeBridge {
     public static int themeSetting() { return 0; }
     public static void setBottomPosition() { throw new IllegalStateException("Unpatched bridge"); }
     public static java.util.List<android.view.View> themeChoices(Object preference) { throw new IllegalStateException("Unpatched bridge"); }
-    public static void setThemeRadioChecked(android.view.View radio, boolean checked) { throw new IllegalStateException("Unpatched bridge"); }
     public static boolean bottomSelected() { return false; }
     public static void unanchorSearchResults(android.view.View view) { throw new IllegalStateException("Unpatched bridge"); }
 }

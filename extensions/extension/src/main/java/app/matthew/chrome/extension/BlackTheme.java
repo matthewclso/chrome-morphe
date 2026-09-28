@@ -15,6 +15,7 @@ import android.os.Parcel;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.widget.PopupWindow;
 
 /** Normalize dark neutral UI surfaces, preserving text, accent colors, images and web content. */
 public final class BlackTheme {
@@ -92,6 +93,27 @@ public final class BlackTheme {
                 activity.getWindow().setNavigationBarColor(Color.BLACK);
             }
         });
+    }
+    private static void preparePopup(PopupWindow popup) {
+        if (!PatchSettings.enabled(PatchSettings.BLACK)) return;
+        Drawable background = popup.getBackground();
+        if (background != null) normalize(background.mutate());
+        View content = popup.getContentView();
+        if (content == null) return;
+        apply(content);
+        // Popup windows have their own view tree, outside the Activity's decor view.
+        content.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+            if (PatchSettings.enabled(PatchSettings.BLACK)) apply(content);
+        });
+    }
+    public static void showAtLocation(PopupWindow popup, View parent, int gravity, int x, int y) {
+        preparePopup(popup); popup.showAtLocation(parent, gravity, x, y);
+    }
+    public static void showAsDropDown(PopupWindow popup, View anchor, int x, int y) {
+        preparePopup(popup); popup.showAsDropDown(anchor, x, y);
+    }
+    public static void showAsDropDown(PopupWindow popup, View anchor, int x, int y, int gravity) {
+        preparePopup(popup); popup.showAsDropDown(anchor, x, y, gravity);
     }
     private static void apply(View view) {
         if (view instanceof WebView || view.getClass().getName().startsWith("org.chromium.content.")) return;

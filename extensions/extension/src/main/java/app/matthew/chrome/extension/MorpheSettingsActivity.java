@@ -48,7 +48,7 @@ public final class MorpheSettingsActivity extends Activity {
         LinearLayout rows = new LinearLayout(this); rows.setOrientation(LinearLayout.VERTICAL);
         rows.setPadding(dp(20), dp(12), dp(20), dp(20));
         add(rows, "Incognito address bar button", "Switch between regular and Incognito tabs from the address bar.", PatchSettings.BUTTON);
-        add(rows, "Black mode", "Use pure black backgrounds with Chrome’s dark theme. Also available in Appearance → Theme.", PatchSettings.BLACK);
+        add(rows, "Black mode", "Use pure black backgrounds with Chrome’s dark theme.", PatchSettings.BLACK);
         add(rows, "True bottom address bar", "Keep the address bar, tab-view controls and tab search at the bottom.", PatchSettings.BOTTOM);
         add(rows, "Open in Incognito by default", "Open Chrome and full-browser links in Incognito. Embedded browser windows keep their usual behavior.", PatchSettings.DEFAULT);
         scroll.addView(rows); page.addView(scroll); setContentView(page);

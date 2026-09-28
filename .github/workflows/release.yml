@@ -14,6 +14,7 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
+      - uses: android-actions/setup-android@v4.0.4
       - uses: gradle/actions/setup-gradle@v6.3.0
       - run: sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
       - name: Build and prepare release assets

@@ -2,7 +2,7 @@ Initial experimental release for Chrome 153.0.8010.53 (801005304), ARM64.
 
 - Chrome Settings → Morphe settings with four persistent switches.
 - Incognito address-bar button and opt-in/out Incognito launcher/link defaults.
-- Black theme in Chrome's Theme screen and Morphe settings.
+- Black mode in Morphe settings, including settings cards and popup menus.
 - True bottom address field, tab-view controls and tab search.
 - Separate Chrome Patch Test installation for unrooted devices.
 
