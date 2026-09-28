@@ -28,8 +28,10 @@ public final class SearchLayout {
         int bottom = Math.min(parent.getHeight(), visible.bottom - position[1]);
         int top = Math.max(0, visible.top - position[1]);
         int barTop = Math.max(top, bottom - toolbar.getHeight());
-        ViewGroup.MarginLayoutParams bar = (ViewGroup.MarginLayoutParams) toolbar.getLayoutParams();
-        if (bar.topMargin != barTop) { bar.topMargin = barTop; toolbar.setLayoutParams(bar); }
+        // Keep wrap-content measurement at the native origin. A portrait top margin can
+        // consume the entire landscape height, measuring the field to zero on rotation.
+        float translation = barTop - toolbar.getTop();
+        if (toolbar.getTranslationY() != translation) toolbar.setTranslationY(translation);
         View results = find(root, "search_activity_suggestions_container");
         if (results == null) results = find(root, "search_activity_suggestions_container_stub");
         if (results == null) return;

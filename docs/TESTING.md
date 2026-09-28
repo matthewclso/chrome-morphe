@@ -13,7 +13,7 @@ Stock Chrome and the Samsung Internet default-browser role are not fixtures.
 | Incognito address bar button off | Hides the button and returns its width to the address field. |
 | True bottom off | Native new-tab toolbar and Hub controls return to their original top positions. |
 | True bottom on | New-tab/address editing field stays below content; Hub action row, mode/group selector, menu and search move below the tab grid. |
-| Active tab search | Field above Gboard, results above the field; accessible bounds do not overlap. |
+| Active tab search | Field above Gboard, results above the field in portrait and landscape; accessible bounds do not overlap. Tapping a history result in landscape opens the fixture in a regular tab. |
 | Native Theme screen | System default, Light and Dark choices remain; Black is controlled only from Morphe settings. |
 | Black off / native Light | Restores Chrome’s native theme; selecting Light also disables Black. |
 | Black palette | Pixel checks cover the toolbar, address field, NTP controls, suggested article cards and settings page. Text and prominent accents remain visible. |
@@ -22,6 +22,10 @@ Stock Chrome and the Samsung Internet default-browser role are not fixtures.
 | Native new-tab visibility | Unchanged, as requested. |
 
 A further device regression on September 28 confirmed full-browser external links use regular tabs with the default option off, private tabs with it on, unchanged Custom Tab controls and regular storage, and return to the native authentication screen after changing appearance from Incognito.
+
+Black mode off/on restored native gray article cards and then #000000 cards. A final rotation check found that a portrait search-field margin could collapse its height in landscape; v0.1.1 fixes this by translating the field while retaining its native measurement.
+
+Morphe Manager on the S26 successfully imported the repository URL and displayed Chrome 153.0.8010.53, build 801005304. APK generation and device installation used the desktop patcher and the existing development signing key; a complete Manager patch/install cycle has not been accepted.
 
 Local UI XML, screenshots, PID-filtered logs and APK reports are retained outside this repository.
 Protected Incognito screenshots remain protected; inspect accessible mode controls and the physical display.

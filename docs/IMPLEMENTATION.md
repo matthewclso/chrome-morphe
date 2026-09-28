@@ -32,7 +32,7 @@ choosing Top in Chrome's address-bar settings disables True bottom. Disabling th
 
 The suggestions container uses the available space above the actual toolbar. NTP morph hooks preserve a real editable
 bottom field. HubToolbarView keeps its native controls/listeners; its wrapper anchors at the bottom and the tab grid
-reserves the measured toolbar/search height. Layout changes recalculate that reservation for rotation and pane changes. The separate SearchActivity places its field above the visible keyboard and removes the native below-toolbar anchor from its result container, reserving the space above the field.
+reserves the measured toolbar/search height. Layout changes recalculate that reservation for rotation and pane changes. The separate SearchActivity translates its field above the visible keyboard without changing its native wrap-content measurement, and removes the native below-toolbar anchor from its result container, reserving the space above the field. Keeping measurement at the original position prevents a portrait margin from collapsing the field when the window becomes shorter in landscape.
 
 ## Black theme
 

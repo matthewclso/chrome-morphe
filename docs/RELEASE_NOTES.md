@@ -1,4 +1,6 @@
-Initial experimental release for Chrome 153.0.8010.53 (801005304), ARM64.
+Experimental release for Chrome 153.0.8010.53 (801005304), ARM64.
+
+Fixes the tab-search field becoming invisible when rotating from portrait to landscape with True bottom enabled. The field retains its native measurement while moving above the keyboard.
 
 - Chrome Settings → Morphe settings with four persistent switches.
 - Incognito address-bar button and opt-in/out Incognito launcher/link defaults.
