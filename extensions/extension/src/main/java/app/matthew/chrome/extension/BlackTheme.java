@@ -1,6 +1,8 @@
 package app.matthew.chrome.extension;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.graphics.Canvas;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -14,11 +16,14 @@ import android.graphics.drawable.ShapeDrawable;
 import android.os.Parcel;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inspector.WindowInspector;
 import android.webkit.WebView;
 import android.widget.PopupWindow;
+import android.widget.ListPopupWindow;
 
 /** Normalize dark neutral UI surfaces, preserving text, accent colors, images and web content. */
 public final class BlackTheme {
+    private static final java.util.WeakHashMap<View, Boolean> watchedRoots = new java.util.WeakHashMap<>();
     private static final java.util.Map<ColorStateList, java.lang.ref.WeakReference<ColorStateList>> palettes =
             java.util.Collections.synchronizedMap(new java.util.WeakHashMap<>());
     private BlackTheme() {}
@@ -33,7 +38,6 @@ public final class BlackTheme {
     }
     public static void setBackgroundColor(View view, int color) { view.setBackgroundColor(background(color)); }
     public static void setPaintColor(Paint paint, int color) { paint.setColor(background(color)); }
-    public static void normalizePaint(Paint paint) { setPaintColor(paint, paint.getColor()); }
     public static void setGradientColor(GradientDrawable drawable, int color) { drawable.setColor(background(color)); }
     public static void setDrawableColor(ColorDrawable drawable, int color) { drawable.setColor(background(color)); }
     public static ColorStateList backgroundTint(ColorStateList colors) {
@@ -79,13 +83,27 @@ public final class BlackTheme {
     public static void setDrawableTint(Drawable drawable, int color) { drawable.setTint(surface(drawable) ? background(color) : color); }
     public static void setDrawableTintList(Drawable drawable, ColorStateList colors) { drawable.setTintList(surface(drawable) ? backgroundTint(colors) : colors); }
     private static boolean surface(Drawable d) {
+        if (d == null) return false;
         if (d instanceof ColorDrawable || d instanceof GradientDrawable || d instanceof ShapeDrawable) return true;
+        if (d instanceof LayerDrawable) {
+            LayerDrawable layers = (LayerDrawable)d;
+            if (layers.getNumberOfLayers() == 0) return false;
+            for (int i = 0; i < layers.getNumberOfLayers(); i++)
+                if (!surface(layers.getDrawable(i))) return false;
+            return true;
+        }
         if (d instanceof InsetDrawable) return surface(((InsetDrawable)d).getDrawable());
         if (d instanceof StateListDrawable) return surface(d.getCurrent());
         return false;
     }
     public static void watch(Activity activity) {
         View root = activity.getWindow().getDecorView();
+        // Framework-created context menus do not call Chrome's PopupWindow methods.
+        // WindowInspector exposes only this process's roots through the public Android API.
+        root.getViewTreeObserver().addOnWindowFocusChangeListener(focused -> root.post(() -> {
+            if (PatchSettings.enabled(PatchSettings.BLACK))
+                for (View window : WindowInspector.getGlobalWindowViews()) watchRoot(window);
+        }));
         root.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
             if (PatchSettings.enabled(PatchSettings.BLACK)) {
                 apply(root);
@@ -100,11 +118,7 @@ public final class BlackTheme {
         if (background != null) normalize(background.mutate());
         View content = popup.getContentView();
         if (content == null) return;
-        apply(content);
-        // Popup windows have their own view tree, outside the Activity's decor view.
-        content.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
-            if (PatchSettings.enabled(PatchSettings.BLACK)) apply(content);
-        });
+        watchRoot(content);
     }
     public static void showAtLocation(PopupWindow popup, View parent, int gravity, int x, int y) {
         preparePopup(popup); popup.showAtLocation(parent, gravity, x, y);
@@ -114,6 +128,28 @@ public final class BlackTheme {
     }
     public static void showAsDropDown(PopupWindow popup, View anchor, int x, int y, int gravity) {
         preparePopup(popup); popup.showAsDropDown(anchor, x, y, gravity);
+    }
+    public static void showListPopup(ListPopupWindow popup) {
+        popup.show();
+        if (!PatchSettings.enabled(PatchSettings.BLACK)) return;
+        if (popup.getBackground() != null) normalize(popup.getBackground().mutate());
+        if (popup.getListView() != null) watchRoot(popup.getListView().getRootView());
+    }
+    public static void showDialog(Dialog dialog) {
+        dialog.show();
+        if (PatchSettings.enabled(PatchSettings.BLACK) && dialog.getWindow() != null)
+            watchRoot(dialog.getWindow().getDecorView());
+    }
+    private static void watchRoot(View root) {
+        apply(root);
+        if (watchedRoots.put(root, true) != null) return;
+        root.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+            if (PatchSettings.enabled(PatchSettings.BLACK)) apply(root);
+        });
+    }
+    public static void drawFeedBackground(Drawable drawable, Canvas canvas) {
+        if (PatchSettings.enabled(PatchSettings.BLACK)) normalize(drawable.mutate());
+        drawable.draw(canvas);
     }
     private static void apply(View view) {
         if (view instanceof WebView || view.getClass().getName().startsWith("org.chromium.content.")) return;
@@ -128,6 +164,9 @@ public final class BlackTheme {
         }
     }
     private static void normalize(Drawable drawable) {
+        if (drawable == null) return;
+        Drawable current = drawable.getCurrent();
+        if (current != null && current != drawable) { normalize(current); return; }
         if (drawable instanceof ColorDrawable) {
             ColorDrawable d = (ColorDrawable) drawable;
             int color = background(d.getColor());
@@ -137,6 +176,16 @@ public final class BlackTheme {
             ColorStateList fill = d.getColor();
             ColorStateList mapped = backgroundTint(fill);
             if (mapped != fill) d.setColor(mapped);
+            int[] gradient = d.getColors();
+            if (gradient != null) {
+                int[] mappedGradient = gradient.clone();
+                boolean changed = false;
+                for (int i = 0; i < gradient.length; i++) {
+                    mappedGradient[i] = background(gradient[i]);
+                    changed |= mappedGradient[i] != gradient[i];
+                }
+                if (changed) d.setColors(mappedGradient);
+            }
         } else if (drawable instanceof LayerDrawable) {
             LayerDrawable d = (LayerDrawable) drawable;
             for (int i = 0; i < d.getNumberOfLayers(); i++) normalize(d.getDrawable(i));

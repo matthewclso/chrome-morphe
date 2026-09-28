@@ -42,8 +42,8 @@ choices remain effective. The Morphe switch is the sole Black-mode control.
 
 Dark neutral backgrounds map to #000000, including translucent fills composited over black; accent colors, text colors and rendered websites are not globally
 recolored. Hooks cover native background/tint setters and ToolbarPhone's background palette, with a layout pass for
-XML-created background drawables and the Discover card's rounded background paint. Super dispatch is preserved to avoid recursively re-entering overridden setters.
-Stateful background palettes retain their state specifications and ordering using the validated [Android 16 ColorStateList parcel format](https://github.com/aosp-mirror/platform_frameworks_base/blob/android16-release/core/java/android/content/res/ColorStateList.java); an unrecognized format is left unchanged. Popup windows are normalized through their own content tree because they are outside the Activity decor tree. The flag gates all transforms; activity recreation restores original drawables when disabled.
+XML-created background drawables. FeedItemDecoration paints suggested article card backgrounds separately beneath the article content. Its standard and staggered layout background draw calls receive the same surface mapping; article text, images and layout retain their native rendering. Super dispatch is preserved to avoid recursively re-entering overridden setters.
+Stateful background palettes retain their state specifications and ordering using the validated [Android 16 ColorStateList parcel format](https://github.com/aosp-mirror/platform_frameworks_base/blob/android16-release/core/java/android/content/res/ColorStateList.java); an unrecognized format is left unchanged. PopupWindow, ListPopupWindow and Dialog surfaces are normalized through their own content tree because they are outside the Activity decor tree. The flag gates all transforms; activity recreation restores original drawables when disabled.
 
 ## Packaging and provenance
 

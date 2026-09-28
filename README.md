@@ -12,7 +12,7 @@ Open **Chrome Settings → Morphe settings** to enable or disable:
 | Setting | Behavior |
 | --- | --- |
 | Incognito address bar button | Switch between existing regular and private tabs; create a tab if the destination is empty. |
-| Black mode | Use `#000000` for dark neutral Chrome backgrounds, settings cards and popup menus. Controlled only from Morphe settings. Web page content and accent colors retain their own colors. |
+| Black mode | Use `#000000` for dark neutral Chrome backgrounds, settings cards, suggested article cards and menus (including long-press menus). Controlled only from Morphe settings. Web page content and accent colors retain their own colors. |
 | True bottom address bar | Keep the address field at the bottom on new-tab pages and above the keyboard. Move the tab-view action row, mode selector, tab groups, menu and search field to the bottom. |
 | Open in Incognito by default | Use Incognito for the launcher and external HTTP(S) links that open the full browser. Embedded Custom Tabs keep their normal behavior. |
 

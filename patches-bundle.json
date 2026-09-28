@@ -1,6 +1,6 @@
 {
-  "created_at": "2026-09-28T04:20:34",
-  "description": "Initial experimental release for Chrome 153.0.8010.53 (801005304), ARM64.\n\n- Chrome Settings \u2192 Morphe settings with four persistent switches.\n- Incognito address-bar button and opt-in/out Incognito launcher/link defaults.\n- Black mode in Morphe settings, including settings cards and popup menus.\n- True bottom address field, tab-view controls and tab search.\n- Separate Chrome Patch Test installation for unrooted devices.\n\nSee the README for Morphe Manager installation and the exact supported app. Use without Google account integration. Device acceptance is limited to the Galaxy S26 / Android 16 / 4 KB pages. Releases contain patches, not Chrome APKs.",
+  "created_at": "2026-09-28T04:46:50",
+  "description": "Initial experimental release for Chrome 153.0.8010.53 (801005304), ARM64.\n\n- Chrome Settings \u2192 Morphe settings with four persistent switches.\n- Incognito address-bar button and opt-in/out Incognito launcher/link defaults.\n- Black mode in Morphe settings, including settings cards, suggested articles, popup and long-press menus.\n- True bottom address field, tab-view controls and tab search.\n- Separate Chrome Patch Test installation for unrooted devices.\n\nSee the README for Morphe Manager installation and the exact supported app. Use without Google account integration. Device acceptance is limited to the Galaxy S26 / Android 16 / 4 KB pages. Releases contain patches, not Chrome APKs.",
   "download_url": "https://github.com/matthewclso/chrome-morphe/releases/download/v0.1.0/chrome-tweaks-0.1.0.mpp",
   "signature_download_url": "",
   "version": "0.1.0"

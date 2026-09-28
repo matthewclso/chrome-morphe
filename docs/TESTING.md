@@ -16,9 +16,12 @@ Stock Chrome and the Samsung Internet default-browser role are not fixtures.
 | Active tab search | Field above Gboard, results above the field; accessible bounds do not overlap. |
 | Native Theme screen | System default, Light and Dark choices remain; Black is controlled only from Morphe settings. |
 | Black off / native Light | Restores Chrome’s native theme; selecting Light also disables Black. |
-| Black palette | Pixel checks cover the toolbar, address field, NTP controls and settings page. Text and prominent accents remain visible. |
+| Black palette | Pixel checks cover the toolbar, address field, NTP controls, suggested article cards and settings page. Text and prominent accents remain visible. |
+| Settings cards and menus | Pixel checks confirm #000000 for settings cards, the three-dot menu and the homepage shortcut long-press menu. |
 | Morphe back button | Transparent idle background matches the surrounding page, including #000000 in Black mode. |
 | Native new-tab visibility | Unchanged, as requested. |
+
+A further device regression on September 28 confirmed full-browser external links use regular tabs with the default option off, private tabs with it on, unchanged Custom Tab controls and regular storage, and return to the native authentication screen after changing appearance from Incognito.
 
 Local UI XML, screenshots, PID-filtered logs and APK reports are retained outside this repository.
 Protected Incognito screenshots remain protected; inspect accessible mode controls and the physical display.

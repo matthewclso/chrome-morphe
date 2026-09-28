@@ -115,17 +115,10 @@ val settingsPatch = bytecodePatch(
         inflate.addInstructions(superCall + 1,
             "invoke-static/range {p0 .. p0}, Lapp/matthew/chrome/extension/HubLayout;->install(Landroid/view/View;)V")
 
-        // Discover feed cards use a custom rounded background drawable with a private Paint.
-        val feedBackground = mutableClassDefBy("Lgd2;")
-        check(feedBackground.superclass == "Landroid/graphics/drawable/Drawable;")
-        val drawFeed = feedBackground.methods.single { it.name == "draw" && it.parameterTypes == listOf("Landroid/graphics/Canvas;") }
-        val feedPaint = drawFeed.implementation!!.instructions.withIndex().single { (_, instruction) ->
-            instruction.opcode == Opcode.IGET_OBJECT &&
-                (instruction as? ReferenceInstruction)?.reference.toString() == "Lgd2;->a:Landroid/graphics/Paint;"
-        }
-        val paintRegister = (feedPaint.value as OneRegisterInstruction).registerA
-        drawFeed.addInstructions(feedPaint.index + 1,
-            "invoke-static/range {v$paintRegister .. v$paintRegister}, $BLACK_THEME->normalizePaint(Landroid/graphics/Paint;)V")
+        // Chromium FeedItemDecoration paints card backgrounds behind the mounted article content.
+        val feedDecoration = classDefBy("Lay9;")
+        check(feedDecoration.fields.count { it.type == "Landroid/graphics/drawable/Drawable;" } == 8)
+        check(feedDecoration.fields.any { it.name == "S" && it.type == "Lm0a;" })
 
         // ToolbarPhone also draws private ColorDrawables instead of View backgrounds.
         val phone = mutableClassDefBy("Lorg/chromium/chrome/browser/toolbar/top/ToolbarPhone;")
@@ -142,6 +135,7 @@ val settingsPatch = bytecodePatch(
         }
 
         var backgrounds = 0
+        var feedDraws = 0
         classDefForEach { cls ->
             if (!cls.type.startsWith("Lapp/matthew/chrome/extension/")) {
                 for (method in cls.methods) {
@@ -151,6 +145,10 @@ val settingsPatch = bytecodePatch(
                         if (instruction.opcode != Opcode.INVOKE_VIRTUAL && instruction.opcode != Opcode.INVOKE_VIRTUAL_RANGE) continue
                         val ref = (instruction as? ReferenceInstruction)?.reference as? MethodReference ?: continue
                         val target = when {
+                            cls.type == feedDecoration.type && ref.toString() == "Landroid/graphics/drawable/Drawable;->draw(Landroid/graphics/Canvas;)V" ->
+                                "drawFeedBackground(Landroid/graphics/drawable/Drawable;Landroid/graphics/Canvas;)V"
+                            ref.toString() == "Landroid/widget/ListPopupWindow;->show()V" -> "showListPopup(Landroid/widget/ListPopupWindow;)V"
+                            ref.toString() == "Landroid/app/Dialog;->show()V" -> "showDialog(Landroid/app/Dialog;)V"
                             ref.definingClass == "Landroid/widget/PopupWindow;" && ref.name == "showAtLocation" &&
                                 ref.parameterTypes == listOf("Landroid/view/View;", "I", "I", "I") ->
                                 "showAtLocation(Landroid/widget/PopupWindow;Landroid/view/View;III)V"
@@ -197,11 +195,13 @@ val settingsPatch = bytecodePatch(
                             it.name == method.name && it.parameterTypes == method.parameterTypes && it.returnType == method.returnType
                         }.replaceInstruction(index, call)
                         backgrounds++
+                        if (target.startsWith("drawFeedBackground(")) feedDraws++
                     }
                 }
             }
         }
         check(backgrounds > 100)
+        check(feedDraws == 2) { "Expected both standard and staggered feed backgrounds" }
         println("Settings, native theme observer and Hub hooks applied; $backgrounds background color calls gated.")
     }
 }
