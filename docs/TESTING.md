@@ -40,9 +40,23 @@ Stock Chrome and the Samsung Internet default-browser role are not fixtures.
   token. A strictly filtered diagnostic found `RESTRICTED_CLIENT`; no raw MicroG
   logs, tokens, account identifiers or authentication responses were retained.
 - A minimum MicroG 7.1.1 check now protects account listing, token and capability
-  requests from the 6.1.1 stub. Recovery of the old account state is pending device
-  acceptance. Public main/release remain at 0.1.2; integration work is on the
-  `microg-integration` branch.
+  requests from the 6.1.1 stub. The installed guarded candidate's capability
+  bytecode was inspected to confirm the early unknown result for unsupported
+  providers and the original native handling for supported providers.
+- With explicit approval, only Chrome Morphe's `GET_ACCOUNTS` permission was
+  revoked, followed by a force-stop/reopen. Chrome removed its stale signed-in
+  state, and the native New Incognito tab command became enabled. Restoring the
+  permission and restarting preserved that availability and exposed Sign in.
+  No app data clear, uninstall or device-account removal was performed.
+- The user then signed in and confirmed **Incognito, existing bookmarks and
+  homepage articles all worked**. The account error was absent and the native
+  Incognito command remained enabled after this sign-in. This validates recovery
+  on this device; it does not override or establish support for supervised or
+  managed accounts.
+- After re-sign-in, the Wallet account-data switch was enabled. No payment data
+  was opened or changed; actual Wallet synchronization remains untested. A further
+  cold restart retained the signed-in account, no account error and an enabled
+  native Incognito command.
 - Native Google Password Manager failed to launch. MicroG's corresponding UI only
   opens Google's website. The patch now offers that website with an explicit
   native-saving/autofill limitation. The main Settings entry opens the dialog on

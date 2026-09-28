@@ -26,8 +26,9 @@ on the device. Do not remove an existing Google account to work around the
   Version 7.1.1 is enforced before account enumeration, token requests and
   capability queries. Version 6.1.1 returned true for every capability, including
   parental controls, and must never be used for Chrome sign-in.
-  On the test device, 7.1.1 returned an unknown parental-control result; recovery
-  from the earlier incorrect cached state is not yet accepted.
+  On the test device, 7.1.1 returned an unknown parental-control result. Chrome
+  retained the earlier incorrect cached state until account access was reset;
+  the recovery below restored Incognito without changing native policy checks.
 - Token requests explicitly bind MicroG's `com.google.android.gms.auth.GetToken`
   component. Chrome's original binder callbacks retain token parsing, expiration,
   invalidation, scopes, real Gaia account IDs, and recoverable consent errors.
@@ -74,9 +75,34 @@ password saving/autofill is unsupported. A separate website login may be require
 **Account-state regression:** after initial sign-in with MicroG 6.1.1, the test
 S26 lost Incognito and homepage articles, and its Wallet account-data switch was
 disabled. The 6.1.1 capability stub is confirmed in both source and APK bytecode.
-Upgrading MicroG does not by itself clear Chrome's previously cached account
-state. Recovery is still being tested; the sign-in patch is not released.
-Wallet service support is not claimed. Native policies are not overridden.
+Upgrading MicroG alone did not clear Chrome's previously cached account state.
+After resetting account access for Chrome Morphe and signing in again, the user
+confirmed that Incognito, bookmarks and homepage articles worked together.
+The released patch blocks account operations with the older provider.
+The Wallet account-data switch also became enabled after recovery; actual Wallet
+synchronization remains untested. Native policies are not overridden.
+
+## Recovery from the earlier MicroG 6.1.1 test build
+
+Only use this procedure if Chrome Morphe was already signed in through MicroG
+6.1.1 and Incognito or homepage articles disappeared. Signing out can remove
+Chrome Morphe's local copies of account data; first preserve anything that has
+not synchronized. Do not remove the Google or MicroG account from the phone.
+
+1. Update Morphe MicroG to **7.1.1 or newer** and patch Chrome with source **0.2.0
+   or newer**, selecting **MicroG sign-in**.
+2. In Android's app settings for **Chrome Morphe**, deny its **Contacts**
+   permission, force-stop Chrome Morphe, then reopen it. This makes its account
+   list empty so Chrome can clear the stale signed-in state. Confirm Chrome
+   settings shows **Sign in**.
+3. Restore account access through **Morphe settings → Allow account access**.
+   Force-stop and reopen Chrome Morphe, then choose **Settings → Sign in** and
+   complete any verification yourself.
+4. Check Incognito, synchronized bookmarks and homepage articles again.
+
+On the test device, the permission change was performed with ADB for Chrome
+Morphe's `android.permission.GET_ACCOUNTS` only. No app data was cleared and no
+Google or MicroG account was removed. The user confirmed successful recovery.
 
 When debugging, inspect only Chrome's process and redact account identifiers.
 Do not collect MicroG logs: upstream authentication logging can include tokens.

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.0 — 2026-09-28
+
+- Add optional MicroG sign-in with account-access setup in Morphe settings.
+- Route account operations and Trusted Vault verification through Morphe MicroG.
+- Require MicroG 7.1.1 or newer to avoid the older provider's incorrect account capabilities and missing key-retrieval service.
+- Document recovery for earlier test builds; signed-in Incognito, bookmarks and homepage articles were confirmed on the S26.
+- Make Google Password Manager offer Google's password website, with a clear native saving/autofill limitation.
+
 ## 0.1.2 — 2026-09-28
 
 - Rename the installed app, patch source and release bundle to Chrome Morphe.
