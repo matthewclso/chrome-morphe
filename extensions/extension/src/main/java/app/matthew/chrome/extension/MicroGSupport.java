@@ -4,6 +4,7 @@ import android.Manifest;
 import android.accounts.Account;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +16,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Parcelable;
 import android.os.RemoteException;
+import android.provider.Settings;
 import android.util.Log;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -72,8 +74,21 @@ public final class MicroGSupport {
     public static void showPasswordManager(Context context) {
         AlertDialog dialog = new AlertDialog.Builder(context)
                 .setTitle("Google Password Manager")
-                .setMessage("Manage saved passwords at passwords.google.com. Native password saving and autofill are not supported by this MicroG integration. The website opens in Chrome Morphe using your browsing-mode preference.")
-                .setPositiveButton("Open website", (d, which) -> {
+                .setMessage("Open Android password settings, then select Google to view or manage saved passwords. You can also use Google's password website.")
+                .setPositiveButton("Android settings", (d, which) -> {
+                    // Android's settings app opens the provider's protected management
+                    // UI with its own authority. Do not call that activity directly.
+                    Intent intent = new Intent(Settings.ACTION_CREDENTIAL_PROVIDER,
+                            Uri.parse("package:com.google.android.gms"))
+                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    try {
+                        context.startActivity(intent);
+                    } catch (ActivityNotFoundException unavailable) {
+                        context.startActivity(new Intent(Settings.ACTION_SETTINGS)
+                                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                    }
+                })
+                .setNeutralButton("Open website", (d, which) -> {
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://passwords.google.com/"))
                             .setPackage(context.getPackageName()).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);

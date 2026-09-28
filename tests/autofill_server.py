@@ -11,6 +11,8 @@ from urllib.parse import parse_qs, urlparse
 
 USERNAME = "morphe-autofill-test-20260928"
 PASSWORD = "MorpheOnly7491test"
+PRIVATE_USERNAME = "morphe-autofill-private-20260928"
+PRIVATE_PASSWORD = "MorphePrivate7491"
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -66,8 +68,10 @@ font:inherit;box-sizing:border-box;width:100%;margin:12px 0 24px;padding:12px}</
             self.send_error(400)
             return
         fields = parse_qs(self.rfile.read(length).decode("utf-8", errors="replace"))
-        matched = (fields.get("username") == [USERNAME]
-                   and fields.get("password") == [PASSWORD])
+        matched = any(fields.get("username") == [username]
+                      and fields.get("password") == [password]
+                      for username, password in [(USERNAME, PASSWORD),
+                                                 (PRIVATE_USERNAME, PRIVATE_PASSWORD)])
         self.send_response(303)
         self.send_header("Location", "/signed-in?matched=" + ("yes" if matched else "no"))
         self.send_header("Cache-Control", "no-store")
