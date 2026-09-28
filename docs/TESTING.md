@@ -28,13 +28,25 @@ Stock Chrome and the Samsung Internet default-browser role are not fixtures.
   settings page no longer showed the verification error.
 - The installed candidate's APK signature and 4 KB alignment pass. Applying only
   Chrome customization also succeeds without selecting the optional MicroG patch.
-- The Google Wallet account-data switch remains disabled on this device after
-  correcting capability requests to use the MicroG account type. Chrome's native
-  eligibility/policy decisions are preserved; the remaining cause is unresolved.
-  Wallet support is not claimed.
+- Regression: the user reported Incognito and homepage articles disappearing;
+  device inspection confirmed Chrome's native New Incognito tab was disabled.
+  The same account permits Incognito in stock Chrome, as confirmed by the user.
+  MicroG 6.1.1's actual APK returns `1` for every `hasCapabilities` request,
+  falsely including parental controls. The initial integration failed to account
+  for this stub. Version 7.1.1 returned `6` (not in cache) for that capability;
+  Chrome retains previously known capability values when updates are unknown.
+- A candidate using Google's Gaia capability endpoint was tested but not retained:
+  both native token and Android authenticator routes failed to obtain its scoped
+  token. A strictly filtered diagnostic found `RESTRICTED_CLIENT`; no raw MicroG
+  logs, tokens, account identifiers or authentication responses were retained.
+- A minimum MicroG 7.1.1 check now protects account listing, token and capability
+  requests from the 6.1.1 stub. Recovery of the old account state is pending device
+  acceptance. Public main/release remain at 0.1.2; integration work is on the
+  `microg-integration` branch.
 - Native Google Password Manager failed to launch. MicroG's corresponding UI only
   opens Google's website. The patch now offers that website with an explicit
-  native-saving/autofill limitation.
+  native-saving/autofill limitation. The main Settings entry opens the dialog on
+  the S26; website navigation still needs acceptance.
 - Custom passphrases, managed/supervised accounts and recovery on another device
   have not been accepted. Native Google password saving/autofill is unsupported.
 

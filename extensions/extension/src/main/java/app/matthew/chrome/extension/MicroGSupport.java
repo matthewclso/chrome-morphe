@@ -44,6 +44,13 @@ public final class MicroGSupport {
         return context.checkSelfPermission(Manifest.permission.GET_ACCOUNTS) == PackageManager.PERMISSION_GRANTED;
     }
 
+    public static boolean isSupported(Context context) {
+        try {
+            return context.getPackageManager().getPackageInfo(PACKAGE, 0).getLongVersionCode() >= 255070107L
+                    && hasKeyRetrieval(context);
+        } catch (PackageManager.NameNotFoundException ignored) { return false; }
+    }
+
     public static boolean hasKeyRetrieval(Context context) {
         return !context.getPackageManager().queryIntentServices(new Intent(
                 PACKAGE + ".auth.key.retrieval.service.START").setPackage(PACKAGE), 0).isEmpty();
@@ -51,6 +58,7 @@ public final class MicroGSupport {
 
     public static void ensureAvailable(Context context) throws IOException {
         if (!isInstalled(context)) throw new IOException("MicroG account service is unavailable");
+        if (!isSupported(context)) throw new IOException("Morphe MicroG 7.1.1 or newer is required");
     }
 
     public static void requestAccountPermission(Activity activity) {
@@ -77,6 +85,7 @@ public final class MicroGSupport {
     public static Account[] accounts(Context context) throws RemoteException {
         if (!hasAccountPermission(context)) return new Account[0];
         if (!isInstalled(context)) throw new RemoteException("MicroG account service is unavailable");
+        if (!isSupported(context)) throw new RemoteException("Morphe MicroG 7.1.1 or newer is required");
         try {
             Bundle result = context.getContentResolver().call(
                     Uri.parse("content://" + PACKAGE + ".auth.accounts"), "get_accounts", ACCOUNT_TYPE, null);

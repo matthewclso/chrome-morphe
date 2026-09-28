@@ -128,6 +128,13 @@ val microGSignInPatch = bytecodePatch(
         check(capabilities.parameterTypes == listOf("Landroid/accounts/Account;", "Ljava/lang/String;") && capabilities.returnType == "I")
         check(capabilities.hasString("Signin.AccountCapabilities.GetFromSystemLibraryResult"))
         capabilities.addInstructions(0, """
+            sget-object v0, Lzb6;->a:Landroid/content/Context;
+            invoke-static {v0}, $MICROG->isSupported(Landroid/content/Context;)Z
+            move-result v0
+            if-nez v0, :supported_provider
+            const/4 v0, 0x0
+            return v0
+            :supported_provider
             invoke-static/range {p1 .. p1}, $MICROG->providerAccount(Landroid/accounts/Account;)Landroid/accounts/Account;
             move-result-object p1
         """.trimIndent())

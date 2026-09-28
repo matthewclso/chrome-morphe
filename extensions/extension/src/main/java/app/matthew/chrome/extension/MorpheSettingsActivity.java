@@ -86,8 +86,8 @@ public final class MorpheSettingsActivity extends Activity {
         if (microGStatus == null) return;
         microGStatus.setText(!MicroGSupport.isInstalled(this)
                 ? "Install Morphe MicroG before signing in."
-                : !MicroGSupport.hasKeyRetrieval(this)
-                ? "Update Morphe MicroG to 7.1.1 or newer for encrypted-data verification. Allow account access below, then sign in through Chrome settings."
+                : !MicroGSupport.isSupported(this)
+                ? "Update Morphe MicroG to 7.1.1 or newer before signing in. Older versions return incorrect account capabilities and lack encrypted-data verification."
                 : !MicroGSupport.hasAccountPermission(this)
                 ? "Allow account access, then return to Chrome settings and choose Sign in. Android lists this permission under Contacts."
                 : "Account access is enabled. Return to Chrome settings and choose Sign in. Add account uses MicroG and may require a separate Google login.");

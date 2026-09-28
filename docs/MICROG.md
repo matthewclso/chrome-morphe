@@ -22,7 +22,12 @@ on the device. Do not remove an existing Google account to work around the
   back to the MicroG type.
 - Capability requests also use the MicroG account type because MicroG reads its
   account cache through Android AccountManager. Responses remain the provider's
-  real allowed/denied/unknown results; eligibility and policy are not overridden.
+  allowed/denied/unknown results; eligibility and policy are not overridden.
+  Version 7.1.1 is enforced before account enumeration, token requests and
+  capability queries. Version 6.1.1 returned true for every capability, including
+  parental controls, and must never be used for Chrome sign-in.
+  On the test device, 7.1.1 returned an unknown parental-control result; recovery
+  from the earlier incorrect cached state is not yet accepted.
 - Token requests explicitly bind MicroG's `com.google.android.gms.auth.GetToken`
   component. Chrome's original binder callbacks retain token parsing, expiration,
   invalidation, scopes, real Gaia account IDs, and recoverable consent errors.
@@ -66,9 +71,12 @@ interface. Chrome Morphe's button explains the limitation and offers that websit
 inside Chrome Morphe, honoring the Incognito-default setting. Native Google
 password saving/autofill is unsupported. A separate website login may be required.
 
-**Google Wallet:** the account-data switch remains disabled on the test S26 after
-the account-type correction. Its remaining cause is unresolved and Wallet support
-is not claimed. The patch does not force eligibility or override native policies.
+**Account-state regression:** after initial sign-in with MicroG 6.1.1, the test
+S26 lost Incognito and homepage articles, and its Wallet account-data switch was
+disabled. The 6.1.1 capability stub is confirmed in both source and APK bytecode.
+Upgrading MicroG does not by itself clear Chrome's previously cached account
+state. Recovery is still being tested; the sign-in patch is not released.
+Wallet service support is not claimed. Native policies are not overridden.
 
 When debugging, inspect only Chrome's process and redact account identifiers.
 Do not collect MicroG logs: upstream authentication logging can include tokens.
