@@ -46,7 +46,8 @@ Stock Chrome and the Samsung Internet default-browser role are not fixtures.
 - Native Google Password Manager failed to launch. MicroG's corresponding UI only
   opens Google's website. The patch now offers that website with an explicit
   native-saving/autofill limitation. The main Settings entry opens the dialog on
-  the S26; website navigation still needs acceptance.
+  the S26, and Open website reaches `passwords.google.com` inside Chrome Morphe.
+  No password entry was opened or edited during testing.
 - Custom passphrases, managed/supervised accounts and recovery on another device
   have not been accepted. Native Google password saving/autofill is unsupported.
 
