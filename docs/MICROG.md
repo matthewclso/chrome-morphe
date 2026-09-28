@@ -68,9 +68,19 @@ is fabricated to enable them. See [device testing](TESTING.md).
 **Google Password Manager:** MicroG 7.1.1's own
 [PasswordManagerActivity](https://github.com/MorpheApp/MicroG-RE/blob/7.1.1/play-services-core/src/main/kotlin/com/google/android/gms/credential/manager/PasswordManagerActivity.kt)
 opens `passwords.google.com`; it does not supply the native Google Password Manager
-interface. Chrome Morphe's button explains the limitation and offers that website
-inside Chrome Morphe, honoring the Incognito-default setting. Native Google
-password saving/autofill is unsupported. A separate website login may be required.
+interface. Since source 0.3.0, Chrome Morphe's button also offers **Android
+settings → Google → Google Password Manager**. Android Settings opens Google's
+protected native interface under its own authority. On the S26, the user
+confirmed viewing the disposable password and deleting that test entry. Google's
+website remains available inside Chrome Morphe, honoring the Incognito-default
+setting; a separate website login may be required.
+
+The optional **Android autofill** patch enables Google's system service for
+regular-tab saving and filling while retaining MicroG sign-in. Select **Autofill
+using another service** in Chrome's autofill settings. Incognito cannot use this
+route: its Android provider is disabled to prevent private login save prompts.
+The system provider uses its own Google account selection, separate from
+MicroG. See [Android autofill setup and acceptance](ANDROID_AUTOFILL.md).
 
 **Account-state regression:** after initial sign-in with MicroG 6.1.1, the test
 S26 lost Incognito and homepage articles, and its Wallet account-data switch was

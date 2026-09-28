@@ -74,7 +74,7 @@ public final class MicroGSupport {
     public static void showPasswordManager(Context context) {
         AlertDialog dialog = new AlertDialog.Builder(context)
                 .setTitle("Google Password Manager")
-                .setMessage("Open Android password settings, then select Google to view or manage saved passwords. You can also use Google's password website.")
+                .setMessage("Open Android password settings, select Google, then Google Password Manager to view or manage saved passwords. You can also use Google's password website.")
                 .setPositiveButton("Android settings", (d, which) -> {
                     // Android's settings app opens the provider's protected management
                     // UI with its own authority. Do not call that activity directly.

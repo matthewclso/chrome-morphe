@@ -17,11 +17,14 @@ merged = cache / "chrome-153.0.8010.53-original-merged.apk"
 source = merged if merged.exists() else workspace / "work/inputs/chrome-153.0.8010.53/chrome.apks"
 output = workspace / "outputs" / args.name
 java = sorted((tools / "jdk").glob("jdk-*/bin/java"))[-1]
-bundles = list((project / "patches/build/libs").glob("*.mpp"))
-if len(bundles) != 1:
-    raise SystemExit("Build the project first; expected one patch bundle in patches/build/libs.")
+version = next(line.split("=", 1)[1].strip() for line in
+               (project / "gradle.properties").read_text().splitlines()
+               if line.startswith("version="))
+bundle = project / f"patches/build/libs/patches-{version}.mpp"
+if not bundle.is_file():
+    raise SystemExit(f"Build the project first; expected {bundle.name}.")
 cmd = [str(java), "-Xmx3g", "-XX:ActiveProcessorCount=4", "-jar", str(tools / "morphe-desktop-1.17.0-all.jar"),
-       "patch", str(source), "-p", str(bundles[0]),
+       "patch", str(source), "-p", str(bundle),
        "--exclusive", "-e", "Separate Chrome Morphe installation"]
 for feature in args.features:
     cmd += ["-e", feature]

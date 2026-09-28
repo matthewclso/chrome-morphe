@@ -4,6 +4,23 @@ Target: Chrome 153.0.8010.53 (801005304), unrooted Galaxy S26 SM-S942U1, Android
 ARM64, 4096-byte pages, Gboard. Test package: `app.matthew.chrome.test`.
 Stock Chrome and the Samsung Internet default-browser role are not fixtures.
 
+## Android autofill acceptance, September 28, 2026
+
+Source 0.3.0 adds an optional Android autofill route. On the same S26, a
+disposable login was saved through stock Google Play Services and filled into
+both regular-tab fields while retaining MicroG sign-in. A different hostname
+did not receive that login. An initial private save-prompt regression was
+blocked by disabling the Android provider for off-the-record profiles. The user
+confirmed the guarded build did not offer to save in Incognito; the Android
+framework recorded no requests during that private test or after backgrounding.
+Regular filling still worked afterward.
+
+The Chrome Password Manager button reached Google's native viewer through
+Android's provider settings. The user confirmed password viewing and deleted
+the disposable entry. See [full setup, scope and evidence](ANDROID_AUTOFILL.md).
+These results supersede the password limitation in the historical 0.2.0
+acceptance below. Incognito autofill remains unavailable.
+
 ## MicroG acceptance, September 28, 2026
 
 - The initial failure was reproduced in Chrome's own process: stock Google Play

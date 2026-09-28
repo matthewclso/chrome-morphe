@@ -1,7 +1,7 @@
-# Android autofill prototype
+# Android autofill
 
-This is a device experiment, not part of the public 0.2.0 release.
-It keeps MicroG sign-in while allowing Google's stock Android autofill service
+Available as an optional patch in source **0.3.0 or newer**. It keeps MicroG
+sign-in while allowing Google's stock Android autofill service
 to handle website forms. Chrome 153 normally rejects that provider in its
 platform-autofill mode; the optional **Android autofill** patch removes
 that exclusion in availability checking and provider preference persistence.
@@ -38,14 +38,23 @@ On the Galaxy S26, while retaining MicroG sign-in:
 - **v43 failed Incognito privacy testing:** the user observed a Google save
   prompt after submitting a private dummy login. Android autofill was disabled
   immediately afterward. Do not distribute that prototype.
-- v45 adds the off-the-record guard described above. Its device privacy and
-  regular-mode regression checks are pending. Private autofill is deliberately
-  unavailable; merely suppressing the submission callback would not prevent
-  disclosure of private form values or later save prompts.
+- v45 adds the off-the-record guard described above. The user confirmed no
+  private save prompt; Android recorded no Chrome autofill requests during that
+  private entry/submission or after backgrounding and reopening the app.
+  The user then confirmed regular-tab filling still worked; both fields matched
+  the disposable credential. Private autofill is deliberately unavailable;
+  merely suppressing the submission callback would not prevent disclosure of
+  private form values or later save prompts.
+- Starting from Chrome's own Google Password Manager button, **Android settings
+  → Google → Google Password Manager** reached the stock native viewer. The user
+  confirmed viewing the disposable password and deleted only that entry.
+  Authentication was left to the user; no real password was inspected.
+- Chrome's account remained visible without an account-error indicator. No
+  account, app data, system provider selection or default-browser role was reset.
 
 ## Device acceptance
 
-1. Install the prototype as an update, with **Chrome customization**, **MicroG
+1. Install as an update, with **Chrome customization**, **MicroG
    sign-in** and **Android autofill** selected. Retain the existing signing key.
 2. Keep Google selected as Android's autofill provider. In Chrome's autofill
    settings, choose **Autofill using another service** and confirm the restart.
@@ -72,11 +81,16 @@ On the Galaxy S26, while retaining MicroG sign-in:
    fails, restore Chrome's original autofill setting and the preceding APK.
 
 Native password viewing from Chrome's settings button is a separate integration
-check. v45 offers Android password settings through the public
+path. Chrome offers Android password settings through the public
 `android.settings.CREDENTIAL_PROVIDER` intent with Google as its package URI,
 plus the existing website fallback. Android Settings must open the provider's
 protected manager under its own authority. This does not impersonate stock
 Chrome or bypass Google's authentication.
+
+The native viewer route above was accepted on Samsung's Android 16 settings UI;
+other manufacturers can arrange provider controls differently. Private Custom
+Tabs use the same off-the-record guard but have not had a separate autofill
+device test. This patch does not enable autofill in Incognito.
 
 Source references, pinned to the target version:
 
