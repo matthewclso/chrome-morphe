@@ -23,7 +23,7 @@ with zipfile.ZipFile(source) as bundle:
     assert 'classes.dex' in bundle.namelist()
 out = root / 'build/release'
 out.mkdir(parents=True, exist_ok=True)
-name = f'chrome-tweaks-{version}.mpp'
+name = f'chrome-morphe-{version}.mpp'
 shutil.copyfile(source, out / name)
 digest = hashlib.sha256(source.read_bytes()).hexdigest()
 (out / 'SHA256SUMS').write_text(f'{digest}  {name}\n')

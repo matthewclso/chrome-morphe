@@ -27,6 +27,6 @@ jobs:
         run: bash gradlew buildAndroid --no-daemon
       - uses: actions/upload-artifact@v7.0.1
         with:
-          name: chrome-tweaks-bundle
+          name: chrome-morphe-bundle
           path: patches/build/libs/*.mpp
           if-no-files-found: error

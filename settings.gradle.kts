@@ -13,4 +13,4 @@ pluginManagement {
     }
 }
 plugins { id("app.morphe.patches") version "1.3.4" }
-rootProject.name = "chrome-tweaks"
+rootProject.name = "chrome-morphe"

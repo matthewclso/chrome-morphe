@@ -8,7 +8,7 @@ import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
 val bottomToolbarPatch = bytecodePatch(
-    description = "Experimental: retains the bottom position on new-tab pages and during address entry when Chrome's bottom position is selected.",
+    description = "Retains the bottom position on new-tab pages and during address entry when Chrome's bottom position is selected.",
     default = false,
 ) {
     compatibleWith(chromeCompatibility)

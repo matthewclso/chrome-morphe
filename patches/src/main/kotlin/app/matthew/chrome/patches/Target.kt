@@ -17,7 +17,7 @@ internal val chromeCompatibility = Compatibility(
     targets = listOf(AppTarget(
         version = TARGET_VERSION,
         versionCodes = mapOf(SupportedAbi.ARM64_V8A to TARGET_VERSION_CODE.toInt()),
-        isExperimental = true,
+        isExperimental = false,
     )),
 )
 

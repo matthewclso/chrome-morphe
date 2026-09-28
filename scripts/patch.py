@@ -22,7 +22,7 @@ if len(bundles) != 1:
     raise SystemExit("Build the project first; expected one patch bundle in patches/build/libs.")
 cmd = [str(java), "-Xmx3g", "-XX:ActiveProcessorCount=4", "-jar", str(tools / "morphe-desktop-1.17.0-all.jar"),
        "patch", str(source), "-p", str(bundles[0]),
-       "--exclusive", "-e", "Separate Chrome test installation"]
+       "--exclusive", "-e", "Separate Chrome Morphe installation"]
 for feature in args.features:
     cmd += ["-e", feature]
 cmd += ["--bytecode-mode", "FULL", "--keystore", str(workspace / "work/keys/chrome-test.bks"),

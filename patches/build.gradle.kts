@@ -1,7 +1,7 @@
 group = "app.matthew.chrome"
 patches {
     about {
-        name = "Chrome Tweaks"
+        name = "Chrome Morphe"
         description = "Chrome settings, Incognito controls, black theme and true bottom toolbar"
         source = "https://github.com/matthewclso/chrome-morphe"
         author = "matthewclso"

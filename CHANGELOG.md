@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.2 — 2026-09-28
+
+- Rename the installed app, patch source and release bundle to Chrome Morphe.
+- Mark the tested 153.0.8010.53 (801005304) target as supported instead of experimental.
+- Preserve the existing package ID for updates and retain exact-build rejection.
+
+## 0.1.1 — 2026-09-28
+
+- Keep tab search visible when rotating between portrait and landscape.
+
 ## 0.1.0 — 2026-09-28
 
 - Add a persistent Morphe settings screen with switches for the Incognito toolbar button, Black mode, true bottom controls and Incognito defaults.

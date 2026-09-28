@@ -27,4 +27,4 @@ jobs:
       - name: Publish patch bundle
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "$GITHUB_REF_NAME" build/release/* --verify-tag --draft --title "Chrome Tweaks $GITHUB_REF_NAME" --notes-file docs/RELEASE_NOTES.md
+        run: gh release create "$GITHUB_REF_NAME" build/release/* --verify-tag --draft --title "Chrome Morphe $GITHUB_REF_NAME" --notes-file docs/RELEASE_NOTES.md

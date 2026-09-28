@@ -1,4 +1,4 @@
-# Chrome Tweaks
+# Chrome Morphe
 
 [![Build](https://github.com/matthewclso/chrome-morphe/actions/workflows/build.yml/badge.svg)](https://github.com/matthewclso/chrome-morphe/actions/workflows/build.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
@@ -26,7 +26,7 @@ Chrome’s native Incognito authentication and new-tab button visibility rules a
 | --- | --- | --- | --- |
 | Google Chrome (`com.android.chrome`) | **153.0.8010.53** | **801005304** | **arm64-v8a** |
 
-Experimental, exact-build support. Other builds are rejected even if compatibility checks are forced.
+Device-tested, exact-build support. Other builds are rejected even if compatibility checks are forced.
 Device acceptance uses an unrooted Galaxy S26 running Android 16 with 4 KB memory pages.
 Other devices and 16 KB page configurations have not been accepted. See [testing](docs/TESTING.md).
 
@@ -46,13 +46,14 @@ Other devices and 16 KB page configurations have not been accepted. See [testing
    ```
 
    Alternatively, download the `.mpp` file from [Releases](https://github.com/matthewclso/chrome-morphe/releases) and add it as a **Local** patch source.
-3. Enable **Experimental app versions** for this source if the supported Chrome build is hidden. Select the original Chrome version listed above. Use the complete installed split package or a complete original APK/APKS, including its native libraries; a lone configuration split is insufficient.
-4. Select **Chrome customization**. Its dependencies include **Separate Chrome test installation** and the feature hooks.
-5. Patch and install the result. It appears as **Chrome Patch Test** (`app.matthew.chrome.test`) alongside stock Chrome. Complete welcome screens using **Use without an account** or **Skip**.
+   If you already added this source, refresh it to **0.1.2 or newer**. Older bundles marked the exact supported build as experimental, causing Manager to warn even when both version numbers matched.
+3. Select the original Chrome version listed above. This exact build is supported without enabling **Experimental app versions**. Use the complete installed split package or a complete original APK/APKS, including its native libraries; a lone configuration split is insufficient.
+4. Select **Chrome customization**. Its dependencies include **Separate Chrome Morphe installation** and the feature hooks.
+5. Patch and install the result. It appears as **Chrome Morphe** (`app.matthew.chrome.test`) alongside stock Chrome. Complete welcome screens using **Use without an account** or **Skip**.
 6. Open **Settings → Morphe settings**. True bottom enables the bottom position. Selecting **Top** in Chrome’s own address-bar settings turns True bottom off.
 
-The renamed app has separate tabs, settings and storage. Google account integration rejects its replacement signing certificate, so use it without an account.
-Keep the same Manager signing key for updates. A signature mismatch means an existing test installation used a different key; reuse that key or back up what you need before removing **only the test app**. Removing it deletes its data.
+The renamed app has separate tabs, settings and storage. Its package ID remains `app.matthew.chrome.test` so existing installations can update without losing data. Google account integration rejects its replacement signing certificate, so use it without an account.
+Keep the same Manager signing key for updates. A signature mismatch means an existing test installation used a different key; reuse that key or back up what you need before removing **only Chrome Morphe**. Removing it deletes its data.
 
 This repository distributes patch bundles, not Chrome APKs. Obtain the exact unmodified app yourself.
 This is a development project and does not provide Chrome security updates automatically.
@@ -69,7 +70,7 @@ export GITHUB_ACTOR=your-github-login
 bash gradlew buildAndroid --no-daemon
 ```
 
-Bundle output: `patches/build/libs/patches-0.1.1.mpp`.
+Bundle output: `patches/build/libs/patches-0.1.2.mpp`.
 The local development helpers in `scripts/` also support the prepared JDK/SDK layout described in [development](docs/DEVELOPMENT.md).
 
 ## Project layout

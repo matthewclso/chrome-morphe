@@ -55,7 +55,7 @@ private val testPackageResources = resourcePatch {
             }
             root.setAttribute("package", TEST_PACKAGE)
             val application = root.getElementsByTagName("application").item(0) as Element
-            application.setAttribute("android:label", "Chrome Patch Test")
+            application.setAttribute("android:label", "Chrome Morphe")
             for (index in 0 until nodes.length) {
                 val element = nodes.item(index) as Element
                 if (element.tagName in setOf("activity", "activity-alias") &&
@@ -64,7 +64,7 @@ private val testPackageResources = resourcePatch {
                             (categories.item(it) as Element).getAttribute("android:name") == "android.intent.category.LAUNCHER"
                         }
                     }) {
-                    element.setAttribute("android:label", "Chrome Patch Test")
+                    element.setAttribute("android:label", "Chrome Morphe")
                 }
             }
         }
@@ -77,8 +77,8 @@ private val testPackageResources = resourcePatch {
 }
 
 val testPackagePatch = bytecodePatch(
-    name = "Separate Chrome test installation",
-    description = "Installs as Chrome Patch Test alongside stock Chrome. Experimental, exact-build only.",
+    name = "Separate Chrome Morphe installation",
+    description = "Installs as Chrome Morphe alongside stock Chrome. Exact-build only.",
     default = false,
 ) {
     compatibleWith(chromeCompatibility)

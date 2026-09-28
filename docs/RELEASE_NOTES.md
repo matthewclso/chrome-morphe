@@ -1,11 +1,8 @@
-Experimental release for Chrome 153.0.8010.53 (801005304), ARM64.
+Chrome Morphe 0.1.2 for Chrome 153.0.8010.53 (801005304), ARM64.
 
-Fixes the tab-search field becoming invisible when rotating from portrait to landscape with True bottom enabled. The field retains its native measurement while moving above the keyboard.
+- Rename the installed app, patch source and release bundle to Chrome Morphe.
+- Mark the device-tested Chrome build as supported, removing Manager’s experimental-version warning when the version and build match.
+- Preserve the existing package ID, signing-key update path, tabs and settings.
+- Retain exact version/build checks; other Chrome builds are rejected.
 
-- Chrome Settings → Morphe settings with four persistent switches.
-- Incognito address-bar button and opt-in/out Incognito launcher/link defaults.
-- Black mode in Morphe settings, including settings cards, suggested articles, popup and long-press menus.
-- True bottom address field, tab-view controls and tab search.
-- Separate Chrome Patch Test installation for unrooted devices.
-
-See the README for Morphe Manager installation and the exact supported app. Use without Google account integration. Device acceptance is limited to the Galaxy S26 / Android 16 / 4 KB pages. Releases contain patches, not Chrome APKs.
+Includes Morphe settings, Incognito controls, Black mode and true bottom controls from the preceding releases. See the README for Morphe Manager installation. Use without Google account integration. Device acceptance is limited to the Galaxy S26 / Android 16 / 4 KB pages. Releases contain patches, not Chrome APKs.

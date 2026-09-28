@@ -1,7 +1,7 @@
 {
-  "created_at": "2026-09-28T04:57:58",
-  "description": "Experimental release for Chrome 153.0.8010.53 (801005304), ARM64.\n\nFixes the tab-search field becoming invisible when rotating from portrait to landscape with True bottom enabled. The field retains its native measurement while moving above the keyboard.\n\n- Chrome Settings \u2192 Morphe settings with four persistent switches.\n- Incognito address-bar button and opt-in/out Incognito launcher/link defaults.\n- Black mode in Morphe settings, including settings cards, suggested articles, popup and long-press menus.\n- True bottom address field, tab-view controls and tab search.\n- Separate Chrome Patch Test installation for unrooted devices.\n\nSee the README for Morphe Manager installation and the exact supported app. Use without Google account integration. Device acceptance is limited to the Galaxy S26 / Android 16 / 4 KB pages. Releases contain patches, not Chrome APKs.",
-  "download_url": "https://github.com/matthewclso/chrome-morphe/releases/download/v0.1.1/chrome-tweaks-0.1.1.mpp",
+  "created_at": "2026-09-28T05:10:07",
+  "description": "Chrome Morphe 0.1.2 for Chrome 153.0.8010.53 (801005304), ARM64.\n\n- Rename the installed app, patch source and release bundle to Chrome Morphe.\n- Mark the device-tested Chrome build as supported, removing Manager\u2019s experimental-version warning when the version and build match.\n- Preserve the existing package ID, signing-key update path, tabs and settings.\n- Retain exact version/build checks; other Chrome builds are rejected.\n\nIncludes Morphe settings, Incognito controls, Black mode and true bottom controls from the preceding releases. See the README for Morphe Manager installation. Use without Google account integration. Device acceptance is limited to the Galaxy S26 / Android 16 / 4 KB pages. Releases contain patches, not Chrome APKs.",
+  "download_url": "https://github.com/matthewclso/chrome-morphe/releases/download/v0.1.2/chrome-morphe-0.1.2.mpp",
   "signature_download_url": "",
-  "version": "0.1.1"
+  "version": "0.1.2"
 }

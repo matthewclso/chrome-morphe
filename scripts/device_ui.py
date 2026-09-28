@@ -24,7 +24,7 @@ raw = subprocess.check_output(adb + ["exec-out", "cat", "/sdcard/chrome-test-ui.
 nodes = list(ET.fromstring(raw).iter("node"))
 test_nodes = [n for n in nodes if n.get("package") == "app.matthew.chrome.test"]
 if not test_nodes:
-    raise SystemExit("Test app is not visible; unlock and foreground Chrome Patch Test.")
+    raise SystemExit("Test app is not visible; unlock and foreground Chrome Morphe.")
 for node in test_nodes:
     text, desc = node.get("text", ""), node.get("content-desc", "")
     if text or desc:
