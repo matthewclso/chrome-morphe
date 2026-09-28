@@ -25,7 +25,7 @@ A further device regression on September 28 confirmed full-browser external link
 
 Black mode off/on restored native gray article cards and then #000000 cards. A final rotation check found that a portrait search-field margin could collapse its height in landscape; v0.1.1 fixes this by translating the field while retaining its native measurement.
 
-Morphe Manager on the S26 successfully imported the repository URL and displayed Chrome 153.0.8010.53, build 801005304. APK generation and device installation used the desktop patcher and the existing development signing key; a complete Manager patch/install cycle has not been accepted.
+Morphe Manager on the S26 successfully imported the repository URL and displayed Chrome 153.0.8010.53, build 801005304. With source 0.1.2, the source name updates to Chrome Morphe. Selecting the matching original APK through Manager's file picker starts patching without an unsupported/experimental-version warning. Manager also completed a patch using its saved original APK; the exported result has the Chrome Morphe label, the expected package/version/build, a valid signature and 4 KB alignment. Device installation used the desktop-patched APK and development signing key; installation of the Manager-signed result remains untested.
 
 Local UI XML, screenshots, PID-filtered logs and APK reports are retained outside this repository.
 Protected Incognito screenshots remain protected; inspect accessible mode controls and the physical display.
