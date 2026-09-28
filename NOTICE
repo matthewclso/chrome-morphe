@@ -10,3 +10,7 @@ not relicensed by this project. Consult their upstream licenses.
 No Chrome APK, Chromium source, native library or Morphe patch implementation
 is distributed in this repository. Chromium source was consulted to understand
 native behavior and map hooks to the independently acquired target APK.
+
+MicroG service interfaces and behavior were consulted to implement the optional
+account adapter independently. No upstream MicroG implementation is bundled.
+See docs/MICROG.md for protocol references and compatibility limits.

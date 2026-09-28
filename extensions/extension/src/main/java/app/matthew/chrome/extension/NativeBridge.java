@@ -17,4 +17,6 @@ public final class NativeBridge {
     public static java.util.List<android.view.View> themeChoices(Object preference) { throw new IllegalStateException("Unpatched bridge"); }
     public static boolean bottomSelected() { return false; }
     public static void unanchorSearchResults(android.view.View view) { throw new IllegalStateException("Unpatched bridge"); }
+    public static Object microGAuthRequest(Object request, android.os.IBinder binder) throws Exception { throw new IllegalStateException("Unpatched bridge"); }
+    public static void refreshMicroGAccounts() { throw new IllegalStateException("Unpatched bridge"); }
 }

@@ -4,6 +4,46 @@ Target: Chrome 153.0.8010.53 (801005304), unrooted Galaxy S26 SM-S942U1, Android
 ARM64, 4096-byte pages, Gboard. Test package: `app.matthew.chrome.test`.
 Stock Chrome and the Samsung Internet default-browser role are not fixtures.
 
+## MicroG acceptance, September 28, 2026
+
+- The initial failure was reproduced in Chrome's own process: stock Google Play
+  Services rejected the renamed package and replacement signing certificate.
+- The account adapter builds and patches the exact target. Device installation
+  uses the same signing key as the preceding installed Chrome Morphe, with `-r`
+  and no uninstall or data clear.
+- Morphe settings exposes the account permission flow only when the optional
+  MicroG patch is selected. The user granted access and confirmed successful
+  Chrome sign-in through MicroG 6.1.1.
+- Sign-in persisted through subsequent Chrome Morphe updates. The remaining
+  account error was traced to Trusted Vault's `KeyRetrieval.API`, which still
+  used stock Google Play Services. MicroG 6.1.1 did not export this service.
+- The Trusted Vault client now uses MicroG's package/action and direct service
+  lookup. With 6.1.1, the error became `API_UNAVAILABLE`, rather than the Google
+  certificate `DEVELOPER_ERROR`, confirming the changed transport boundary.
+- With user approval, MicroG was updated in place to 7.1.1 after checking the
+  APK signature matched the installed MicroG certificate. Android now resolves
+  the required key-retrieval service. The user completed verification, confirmed
+  the account error cleared, and confirmed existing bookmarks appeared.
+- Sign-in and successful verification persisted after a cold restart; the account
+  settings page no longer showed the verification error.
+- The installed candidate's APK signature and 4 KB alignment pass. Applying only
+  Chrome customization also succeeds without selecting the optional MicroG patch.
+- The Google Wallet account-data switch remains disabled on this device after
+  correcting capability requests to use the MicroG account type. Chrome's native
+  eligibility/policy decisions are preserved; the remaining cause is unresolved.
+  Wallet support is not claimed.
+- Native Google Password Manager failed to launch. MicroG's corresponding UI only
+  opens Google's website. The patch now offers that website with an explicit
+  native-saving/autofill limitation.
+- Custom passphrases, managed/supervised accounts and recovery on another device
+  have not been accepted. Native Google password saving/autofill is unsupported.
+
+Repeat permission denial/grant, account addition, cold-start sign-in retention,
+transport failure, encrypted-data verification, actual bookmark synchronization,
+and Incognito authentication when changing these hooks. Account display alone is
+not Sync acceptance. Never record account credentials, tokens, encryption keys,
+or MicroG authentication logs in test evidence.
+
 ## Settings and layout acceptance, September 27–28, 2026
 
 | Check | Observed result |

@@ -48,11 +48,12 @@ Other devices and 16 KB page configurations have not been accepted. See [testing
    Alternatively, download the `.mpp` file from [Releases](https://github.com/matthewclso/chrome-morphe/releases) and add it as a **Local** patch source.
    If you already added this source, refresh it to **0.1.2 or newer**. Older bundles marked the exact supported build as experimental, causing Manager to warn even when both version numbers matched.
 3. Select the original Chrome version listed above. This exact build is supported without enabling **Experimental app versions**. Use the complete installed split package or a complete original APK/APKS, including its native libraries; a lone configuration split is insufficient.
-4. Select **Chrome customization**. Its dependencies include **Separate Chrome Morphe installation** and the feature hooks.
+4. Select **Chrome customization**. Its dependencies include **Separate Chrome Morphe installation** and the feature hooks. For Google account sign-in, also select the optional **MicroG sign-in** patch and install [Morphe MicroG 7.1.1 or newer](https://github.com/MorpheApp/MicroG-RE/releases). This option requires source **0.2.0 or newer**.
 5. Patch and install the result. It appears as **Chrome Morphe** (`app.matthew.chrome.test`) alongside stock Chrome. Complete welcome screens using **Use without an account** or **Skip**.
 6. Open **Settings → Morphe settings**. True bottom enables the bottom position. Selecting **Top** in Chrome’s own address-bar settings turns True bottom off.
 
-The renamed app has separate tabs, settings and storage. Its package ID remains `app.matthew.chrome.test` so existing installations can update without losing data. Google account integration rejects its replacement signing certificate, so use it without an account.
+The renamed app has separate tabs, settings and storage. Its package ID remains `app.matthew.chrome.test` so existing installations can update without losing data. Stock Google Play Services rejects its replacement signing certificate. With **MicroG sign-in** selected, open **Morphe settings → Allow account access**, grant Android's Contacts permission for account enumeration, then return to Chrome settings and choose **Sign in**. A separate MicroG login may be required; existing device Google accounts are not automatically shared. See [MicroG setup and limitations](docs/MICROG.md).
+Google Password Manager offers the Google website; native Google password saving and autofill are not supported by this integration. Account sign-in and bookmark synchronization do not imply support for every Google service.
 Keep the same Manager signing key for updates. A signature mismatch means an existing test installation used a different key; reuse that key or back up what you need before removing **only Chrome Morphe**. Removing it deletes its data.
 
 This repository distributes patch bundles, not Chrome APKs. Obtain the exact unmodified app yourself.
@@ -70,7 +71,7 @@ export GITHUB_ACTOR=your-github-login
 bash gradlew buildAndroid --no-daemon
 ```
 
-Bundle output: `patches/build/libs/patches-0.1.2.mpp`.
+Bundle output: `patches/build/libs/patches-0.2.0.mpp`.
 The local development helpers in `scripts/` also support the prepared JDK/SDK layout described in [development](docs/DEVELOPMENT.md).
 
 ## Project layout

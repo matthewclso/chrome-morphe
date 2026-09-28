@@ -45,6 +45,15 @@ recolored. Hooks cover native background/tint setters and ToolbarPhone's backgro
 XML-created background drawables. FeedItemDecoration paints suggested article card backgrounds separately beneath the article content. Its standard and staggered layout background draw calls receive the same surface mapping; article text, images and layout retain their native rendering. Super dispatch is preserved to avoid recursively re-entering overridden setters.
 Stateful background palettes retain their state specifications and ordering using the validated [Android 16 ColorStateList parcel format](https://github.com/aosp-mirror/platform_frameworks_base/blob/android16-release/core/java/android/content/res/ColorStateList.java); an unrecognized format is left unchanged. PopupWindow, ListPopupWindow and Dialog surfaces are normalized through their own content tree because they are outside the Activity decor tree. The flag gates all transforms; activity recreation restores original drawables when disabled.
 
+## Account integration
+
+The optional MicroG patch replaces Chrome's account-provider lookup and token
+service transport, retaining its native account IDs, callback protocol, scopes,
+consent handling and error recovery. Android account creation and repair use the
+MicroG account type. A separate, narrowly scoped Trusted Vault client override
+routes encryption-key recovery through MicroG without changing the security
+domain or the verification UI. See [MicroG](MICROG.md) for setup and boundaries.
+
 ## Packaging and provenance
 
 The separate installation keeps original component/JNI class names but rewrites package identity, permissions,

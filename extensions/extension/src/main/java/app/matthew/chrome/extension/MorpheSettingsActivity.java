@@ -16,6 +16,7 @@ import android.widget.TextView;
 /** A private in-app settings destination reachable even when the toolbar button is hidden. */
 public final class MorpheSettingsActivity extends Activity {
     private int foreground, secondary;
+    private TextView microGStatus;
     @Override public void onCreate(Bundle state) {
         boolean dark = NativeBridge.themeSetting() == 2 || (NativeBridge.themeSetting() == 0
                 && (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES);
@@ -51,7 +52,45 @@ public final class MorpheSettingsActivity extends Activity {
         add(rows, "Black mode", "Use pure black backgrounds with Chrome’s dark theme.", PatchSettings.BLACK);
         add(rows, "True bottom address bar", "Keep the address bar, tab-view controls and tab search at the bottom.", PatchSettings.BOTTOM);
         add(rows, "Open in Incognito by default", "Open Chrome and full-browser links in Incognito. Embedded browser windows keep their usual behavior.", PatchSettings.DEFAULT);
+        if (MicroGSupport.isPatched()) {
+            TextView title = new TextView(this);
+            title.setText("MicroG sign-in"); title.setTextSize(18); title.setTextColor(foreground);
+            rows.addView(title);
+            microGStatus = new TextView(this);
+            microGStatus.setTextColor(secondary); microGStatus.setPadding(0, dp(8), 0, dp(8));
+            rows.addView(microGStatus);
+            Button setup = new Button(this); setup.setText("Allow account access");
+            setup.setOnClickListener(v -> {
+                if (!MicroGSupport.hasAccountPermission(this)) MicroGSupport.requestAccountPermission(this);
+                else { NativeBridge.refreshMicroGAccounts(); updateMicroGStatus(); }
+            });
+            rows.addView(setup);
+        }
         scroll.addView(rows); page.addView(scroll); setContentView(page);
+    }
+    @Override public void onResume() {
+        super.onResume();
+        if (microGStatus != null) {
+            updateMicroGStatus();
+            if (MicroGSupport.hasAccountPermission(this)) NativeBridge.refreshMicroGAccounts();
+        }
+    }
+    @Override public void onRequestPermissionsResult(int request, String[] permissions, int[] results) {
+        super.onRequestPermissionsResult(request, permissions, results);
+        if (request == MicroGSupport.PERMISSION_REQUEST) {
+            updateMicroGStatus();
+            if (MicroGSupport.hasAccountPermission(this)) NativeBridge.refreshMicroGAccounts();
+        }
+    }
+    private void updateMicroGStatus() {
+        if (microGStatus == null) return;
+        microGStatus.setText(!MicroGSupport.isInstalled(this)
+                ? "Install Morphe MicroG before signing in."
+                : !MicroGSupport.hasKeyRetrieval(this)
+                ? "Update Morphe MicroG to 7.1.1 or newer for encrypted-data verification. Allow account access below, then sign in through Chrome settings."
+                : !MicroGSupport.hasAccountPermission(this)
+                ? "Allow account access, then return to Chrome settings and choose Sign in. Android lists this permission under Contacts."
+                : "Account access is enabled. Return to Chrome settings and choose Sign in. Add account uses MicroG and may require a separate Google login.");
     }
     private void add(LinearLayout parent, String title, String summary, String key) {
         Switch control = new Switch(this);
