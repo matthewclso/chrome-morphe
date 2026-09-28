@@ -51,6 +51,17 @@ On the Galaxy S26, while retaining MicroG sign-in:
   Authentication was left to the user; no real password was inspected.
 - Chrome's account remained visible without an account-error indicator. No
   account, app data, system provider selection or default-browser role was reset.
+- Final release build v46 (source 0.3.0) was installed with the same signing key.
+  Its private guard matches v45's verified bytecode. A further private form test
+  used native touch/text input and completed with the expected dummy credential;
+  the private-mode control remained selected, no save prompt appeared, and the
+  framework recorded no autofill requests. Sign-in and Android autofill selection
+  remained present afterward. Test tabs, servers and ADB forwards were removed.
+
+Accepted release bundle SHA-256:
+`2ba57042b85707dbca777742b7dc81330c8531bf762dd7e66391f23c9a36a162`.
+Local v46 APK SHA-256 (not distributed):
+`0edb960ac0334dfaf9b80a69a9c824a131921b767fed61bfa4fc1d210a4fa3a2`.
 
 ## Device acceptance
 
