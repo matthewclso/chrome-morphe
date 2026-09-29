@@ -7,7 +7,8 @@ exact descriptors, call counts and resource IDs validate the supported artifact.
 ## Settings and state
 
 A resource patch adds a native Preference entry to MainSettings, opening a private, non-exported MorpheSettingsActivity.
-The four switches use one SharedPreferences file, `chrome_patch`. The Incognito-default key is preserved from the prototype.
+The four switches use one SharedPreferences file, `chrome_patch`. The old `incognito_default` choice migrates to
+`remember_last_mode`, preserving an explicit opt-out. `last_mode_incognito` stores only a mode bit.
 Black mode is controlled only from Morphe settings. Hiding the toolbar button never hides the settings entry.
 
 The application hook initializes only the browser's main process. Application context is retained, activities are weakly
@@ -17,8 +18,15 @@ Native authentication state and secure-window flags are not modified.
 ## Browsing modes
 
 The mode button calls Chrome's native menu action for an empty collection and TabModelSelector for existing tabs.
-Incognito availability uses Chrome's native profile policy check. Default-mode routing covers MAIN/LAUNCHER and external
+Incognito availability uses Chrome's native profile policy check. Remembered-mode routing covers MAIN/LAUNCHER and external
 HTTP(S) full-browser intents, preserving trusted internal regular-tab choices and CustomTabActivity routing.
+
+The full-browser activity records the selected mode on pause, including native tab-view selections, and after a toolbar
+mode switch. It waits for native tab-state initialization before recording or restoring, so the transient startup regular
+model cannot replace the remembered choice. Launcher restoration selects an existing native model or uses Chrome's native
+new-tab command when the destination is empty. A newer intent cancels pending launcher restoration. With no saved mode,
+Chrome keeps its native startup choice. Custom Tabs do not update the remembered full-browser mode; disabling the setting
+restores native routing. Incognito tab persistence and authentication remain Chrome's responsibility.
 
 Toolbar inflation is hooked immediately after the native super call: later R8 code reuses the receiver register and can
 jump straight to a return. Branch-target external-link instructions are replaced rather than inserting a skippable prefix.

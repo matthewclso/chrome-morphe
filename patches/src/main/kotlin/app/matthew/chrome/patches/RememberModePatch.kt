@@ -8,20 +8,22 @@ import com.android.tools.smali.dexlib2.iface.instruction.FiveRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
-val defaultIncognitoPatch = bytecodePatch(
-    description = "Opens launcher sessions and external HTTP(S) links in Incognito. Custom Tabs remain unchanged. Hold the mode button for settings.",
+private const val MODE_ROUTING = "Lapp/matthew/chrome/extension/ModeRouting;"
+
+val rememberModePatch = bytecodePatch(
+    description = "Reopens Chrome and full-browser links in the last-used browsing mode. Custom Tabs remain unchanged.",
     default = false,
 ) {
     compatibleWith(chromeCompatibility)
     dependsOn(modeTogglePatch)
     execute {
         requireTarget(packageMetadata)
-        mutableClassDefBy(BRIDGE).methods.single { it.name == "defaultFeatureEnabled" }
+        mutableClassDefBy(BRIDGE).methods.single { it.name == "rememberModeFeatureEnabled" }
             .addInstructions(0, "const/4 v0, 0x1\nreturn v0")
         val activity = mutableClassDefBy(ACTIVITY)
         val launcher = activity.methods.single { it.hasString("MobileStartup.MainIntentReceived") }
         check(launcher.parameterTypes.isEmpty() && launcher.returnType == "V")
-        launcher.addInstructions(0, "invoke-static/range {p0 .. p0}, $EXTENSION->onLauncher(Landroid/app/Activity;)V")
+        launcher.addInstructions(0, "invoke-static/range {p0 .. p0}, $MODE_ROUTING->onLauncher(Landroid/app/Activity;)V")
 
         val initial = activity.methods.single { it.hasString("#createInitialTab executed.") }
         // Rewrite the value before homepage/profile selection, rather than moving a regular tab later.
@@ -35,7 +37,7 @@ val defaultIncognitoPatch = bytecodePatch(
         val thisRegister = initial.implementation!!.registerCount - 1
         check(thisRegister < 16 && modelRegister < 16)
         initial.addInstructions(homepage.index, """
-            invoke-static {v$thisRegister, v$modelRegister}, $EXTENSION->initialIncognito(Landroid/app/Activity;Z)Z
+            invoke-static {v$thisRegister, v$modelRegister}, $MODE_ROUTING->initialIncognito(Landroid/app/Activity;Z)Z
             move-result v$modelRegister
         """.trimIndent())
 
@@ -54,11 +56,11 @@ val defaultIncognitoPatch = bytecodePatch(
         val creator = (externalCall.value as ReferenceInstruction).reference
         // Replace the branch target itself so jumps to this creator cannot skip our hook.
         external.replaceInstruction(externalCall.index,
-            "invoke-static {v${registers.registerC}, v${registers.registerD}, v$intentRegister}, $EXTENSION->externalIncognito(Landroid/app/Activity;ZLandroid/content/Intent;)Z")
+            "invoke-static {v${registers.registerC}, v${registers.registerD}, v$intentRegister}, $MODE_ROUTING->externalIncognito(Landroid/app/Activity;ZLandroid/content/Intent;)Z")
         external.addInstructions(externalCall.index + 1, """
             move-result v${registers.registerD}
             invoke-super {v${registers.registerC}, v${registers.registerD}}, $creator
         """.trimIndent())
-        println("Incognito default hooks: launcher ${launcher.name}, initial ${initial.name}, external ${external.name}")
+        println("Remember mode hooks: launcher ${launcher.name}, initial ${initial.name}, external ${external.name}")
     }
 }

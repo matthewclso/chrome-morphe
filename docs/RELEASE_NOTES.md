@@ -1,13 +1,9 @@
-Chrome Morphe 0.3.0 for Chrome 153.0.8010.53 (801005304), ARM64.
+Chrome Morphe 0.4.0 for Chrome 153.0.8010.53 (801005304), ARM64.
 
-- Add optional **Android autofill** for Google's system password saving and filling in regular tabs, including while Chrome remains signed in through MicroG.
-- Disable Android autofill for all off-the-record profiles. An early prototype allowed a Google save prompt in Incognito; that prototype was not released. Incognito cannot save or fill through this route.
-- Add **Google Password Manager → Android settings → Google → Google Password Manager** to reach Google's native viewer. Google's password website remains available as an alternative.
+- Replace **Open in Incognito by default** with **Remember last browsing mode**. Leaving Chrome in regular mode reopens regular mode; leaving it in Incognito reopens Incognito.
+- Full-browser HTTP(S) links from other apps use the same remembered mode. Embedded Custom Tabs retain their usual behavior and do not change the saved full-browser choice.
+- Preserve the old toggle's enabled/disabled choice on upgrade. Mode recording waits for Chrome to finish restoring tabs. Native Incognito availability checks, authentication and private-tab lifetime remain in force.
 
-In Morphe Manager, select **Chrome customization**, **MicroG sign-in**, and **Android autofill**. Keep Google selected as Android's autofill provider, then choose **Chrome Settings → Autofill services → Autofill using another service** and confirm the restart. MicroG sign-in still requires Morphe MicroG 7.1.1 or newer and account access through Morphe settings. Keep the same signing key when updating.
+In Morphe Manager, select **Chrome customization**. Keep **MicroG sign-in** and **Android autofill** selected if you already use them, and use the same signing key when updating. Android autofill remains available only in regular tabs; account and password-provider behavior are unchanged by this update.
 
-On the Galaxy S26, saving a disposable login, filling both regular-tab fields, hostname separation and native password viewing were verified. With the private guard, the user confirmed no Incognito save prompt and the Android framework recorded no private autofill requests. The disposable saved password was deleted after verification. Incognito authentication and Google's provider authentication are not bypassed.
-
-Passwords use the account selected in Google's system provider, independently of MicroG. This does not restore Chrome's first-party Google Play Services integration. The native settings route was tested on Samsung Android 16; other settings layouts and private Custom Tab autofill behavior remain untested. Existing account and UI patches are retained.
-
-Device acceptance is limited to Galaxy S26 / Android 16 / 4 KB pages. Releases contain patches, not Chrome or MicroG APKs. See docs/ANDROID_AUTOFILL.md for setup and test details.
+Device acceptance is limited to Galaxy S26 / Android 16 / 4 KB pages. Releases contain patches, not Chrome or MicroG APKs. See docs/TESTING.md for the device results and repeatable fixtures.

@@ -41,6 +41,9 @@ val modeTogglePatch = bytecodePatch(
         val selectorClass = classDefBy(selector.returnType)
         val getModel = selectorClass.methods.single { it.parameterTypes == listOf("Z") && it.returnType == TAB_MODEL }
         val select = selectorClass.methods.single { it.name == "F" && it.parameterTypes == listOf("Z") && it.returnType == "V" }
+        val ready = selectorClass.methods.single { it.name == "v" && it.parameterTypes.isEmpty() && it.returnType == "Z" }
+        check(ready.implementation!!.instructions.map { it.opcode } == listOf(Opcode.IGET_BOOLEAN, Opcode.RETURN))
+        check((ready.implementation!!.instructions.first() as ReferenceInstruction).reference.toString() == "Lr5r;->m:Z")
         val bridgeClass = mutableClassDefBy(BRIDGE)
         fun bridge(name: String, body: String) {
             val old = bridgeClass.methods.single { it.name == name }
@@ -57,6 +60,18 @@ val modeTogglePatch = bytecodePatch(
             move-result-object v0
             invoke-interface {v0}, $TAB_MODEL->isIncognito()Z
             move-result v0
+            return v0
+        """)
+        bridge("tabsReady", """
+            check-cast p0, $ACTIVITY
+            invoke-virtual {p0}, $selector
+            move-result-object v0
+            if-eqz v0, :not_ready
+            invoke-virtual {v0}, $ready
+            move-result v0
+            return v0
+            :not_ready
+            const/4 v0, 0x0
             return v0
         """)
         bridge("tabCount", """

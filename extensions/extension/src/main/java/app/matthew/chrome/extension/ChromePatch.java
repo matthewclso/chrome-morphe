@@ -60,6 +60,7 @@ public final class ChromePatch {
                     NativeBridge.selectModel(activity, target);
                 }
                 updateButton(activity, toolbar, toggle);
+                ModeRouting.remember(activity);
             } catch (RuntimeException e) {
                 Log.e(TAG, "Mode switch failed", e);
                 Toast.makeText(activity, "Unable to switch browsing mode", Toast.LENGTH_SHORT).show();
@@ -80,43 +81,6 @@ public final class ChromePatch {
         });
         toggle.post(() -> updateButton(activity, toolbar, toggle));
         Log.i(TAG, "Mode button installed");
-    }
-
-    private static boolean defaultEnabled(Activity activity) {
-        return NativeBridge.defaultFeatureEnabled() && activity.getSharedPreferences("chrome_patch", 0)
-                .getBoolean("incognito_default", true);
-    }
-
-    private static boolean launcher(Intent intent) {
-        return intent != null && Intent.ACTION_MAIN.equals(intent.getAction())
-                && intent.hasCategory(Intent.CATEGORY_LAUNCHER);
-    }
-
-    public static boolean initialIncognito(Activity activity, boolean original) {
-        return original || (launcher(activity.getIntent()) && defaultEnabled(activity)
-                && NativeBridge.incognitoAllowed(activity));
-    }
-
-    public static boolean externalIncognito(Activity activity, boolean original, Intent intent) {
-        if (original) return true;
-        if (!defaultEnabled(activity) || intent == null || !Intent.ACTION_VIEW.equals(intent.getAction())) return false;
-        String scheme = intent.getScheme();
-        return ("https".equalsIgnoreCase(scheme) || "http".equalsIgnoreCase(scheme))
-                && NativeBridge.incognitoAllowed(activity);
-    }
-
-    public static void onLauncher(Activity activity) {
-        if (!defaultEnabled(activity) || !NativeBridge.incognitoAllowed(activity)) return;
-        // Cold startup invokes this before synchronous tab restoration has finished.
-        activity.getWindow().getDecorView().post(() -> {
-            if (activity.isFinishing() || activity.isDestroyed()) return;
-            if (NativeBridge.tabCount(activity, true) == 0) {
-                int menuId = activity.getResources().getIdentifier("new_incognito_tab_menu_id", "id", activity.getPackageName());
-                if (menuId != 0) NativeBridge.newTab(activity, menuId);
-            } else {
-                NativeBridge.selectModel(activity, true);
-            }
-        });
     }
 
     public static int suggestionTop(View suggestions, int original) {

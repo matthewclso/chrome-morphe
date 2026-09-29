@@ -72,7 +72,7 @@ interface. Since source 0.3.0, Chrome Morphe's button also offers **Android
 settings → Google → Google Password Manager**. Android Settings opens Google's
 protected native interface under its own authority. On the S26, the user
 confirmed viewing the disposable password and deleting that test entry. Google's
-website remains available inside Chrome Morphe, honoring the Incognito-default
+website remains available inside Chrome Morphe, honoring the remembered-mode
 setting; a separate website login may be required.
 
 The optional **Android autofill** patch enables Google's system service for

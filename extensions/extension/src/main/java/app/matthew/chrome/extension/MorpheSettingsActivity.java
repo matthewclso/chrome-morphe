@@ -51,7 +51,7 @@ public final class MorpheSettingsActivity extends Activity {
         add(rows, "Incognito address bar button", "Switch between regular and Incognito tabs from the address bar.", PatchSettings.BUTTON);
         add(rows, "Black mode", "Use pure black backgrounds with Chrome’s dark theme.", PatchSettings.BLACK);
         add(rows, "True bottom address bar", "Keep the address bar, tab-view controls and tab search at the bottom.", PatchSettings.BOTTOM);
-        add(rows, "Open in Incognito by default", "Open Chrome and full-browser links in Incognito. Embedded browser windows keep their usual behavior.", PatchSettings.DEFAULT);
+        add(rows, "Remember last browsing mode", "Reopen Chrome and full-browser links in the mode you last used: regular or Incognito. Embedded browser windows keep their usual behavior.", PatchSettings.REMEMBER_MODE);
         if (MicroGSupport.isPatched()) {
             TextView title = new TextView(this);
             title.setText("MicroG sign-in"); title.setTextSize(18); title.setTextColor(foreground);

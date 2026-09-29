@@ -4,6 +4,15 @@ Target: Chrome 153.0.8010.53 (801005304), unrooted Galaxy S26 SM-S942U1, Android
 ARM64, 4096-byte pages, Gboard. Test package: `app.matthew.chrome.test`.
 Stock Chrome and the Samsung Internet default-browser role are not fixtures.
 
+## Remembered-mode candidate, September 28, 2026
+
+Source 0.4.0 replaces forced Incognito startup with the last-used mode for the
+launcher and full-browser HTTP(S) links. Candidate v48 builds and patches the
+exact target, passes signature and 4 KB alignment checks, and is installed with
+the existing signing key. Device behavior checks are pending a screen unlock;
+these build/install results do not establish startup or privacy acceptance.
+Manager metadata remains on the accepted 0.3.0 release until testing completes.
+
 ## Android autofill acceptance, September 28, 2026
 
 Source 0.3.0 adds an optional Android autofill route. On the same S26, a
@@ -134,6 +143,8 @@ No real browsing data is needed for any privacy assertion.
 
 ## Repeatable fixtures
 
+Use disposable tabs only; do not close or inspect unrelated user tabs. Since source 0.4.0, routing follows the remembered mode instead of always choosing Incognito.
+
 1. Run `python3 tests/storage_server.py` on the development machine, then forward the device port with `adb reverse tcp:8765 tcp:8765`.
 2. In an explicit regular tab, enter `http://127.0.0.1:8765/set?value=regular`. Confirm both storage values are regular.
 3. Build `python3 scripts/build_link_harness.py` and install the resulting local fixture APK.
@@ -144,11 +155,13 @@ No real browsing data is needed for any privacy assertion.
      --es kind full --es url http://127.0.0.1:8765/read
    ```
 
-   Confirm Incognito and empty storage. `-S` stops only the fixture app so a previous Custom Tab task cannot merely be brought to the foreground.
+   First confirm regular mode and regular storage. Switch to Incognito, leave Chrome, send the same link again, and confirm private mode with isolated storage. `-S` stops only the fixture app so a previous Custom Tab task cannot merely be brought to the foreground.
 5. Send `http://127.0.0.1:8765/private-only?value=private`, switch to regular, and confirm regular values remain. Search regular history for `private-only`; expect no results.
 6. Send `--es kind custom --es url http://127.0.0.1:8765/custom-tab`. Expect `CustomTabActivity`, Close/Minimize/Share controls, regular storage, and no added mode button.
-7. Close all Incognito tabs in the test app, reopen the `/read` fixture privately, and expect empty storage.
-8. Disable the default setting by holding the mode button. Verify launcher and external link behavior, then restore it.
+7. In a clean test profile, close all disposable Incognito tabs, reopen the `/read` fixture privately, and expect empty storage. Never close unrelated user tabs to perform this check.
+8. Hold the mode button to open Morphe settings, disable **Remember last browsing mode**, and verify native launcher/external-link behavior. Restore the setting afterward.
+9. With remembered mode enabled, leave and reopen through the launcher in each mode, both warm and after a force-stop of Chrome Morphe. Repeat using a mode selection from the native tab view with the toolbar mode button hidden.
+10. Open a Custom Tab while full Chrome was last private, then reopen the full browser and confirm it still selects Incognito. Check authentication if private tabs are locked.
 
 Use `scripts/device_ui.py LABEL` for accessible UI evidence. `--tap` taps one exact matching test-app label and refuses ambiguous matches. `--serial` or `ANDROID_SERIAL` selects the phone when more than one device is connected.
 

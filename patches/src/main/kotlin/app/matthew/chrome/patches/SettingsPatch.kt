@@ -47,11 +47,11 @@ private val settingsResources = resourcePatch {
 
 val settingsPatch = bytecodePatch(
     name = "Chrome customization",
-    description = "Morphe settings, Incognito toolbar switch/default, black theme and true bottom controls.",
+    description = "Morphe settings, Incognito toolbar switch, remembered browsing mode, black theme and true bottom controls.",
     default = true,
 ) {
     compatibleWith(chromeCompatibility)
-    dependsOn(testPackagePatch, modeTogglePatch, defaultIncognitoPatch, bottomToolbarPatch, settingsResources)
+    dependsOn(testPackagePatch, modeTogglePatch, rememberModePatch, bottomToolbarPatch, settingsResources)
     execute {
         requireTarget(packageMetadata)
         val application = mutableClassDefBy("Lorg/chromium/chrome/browser/base/SplitChromeApplication;")

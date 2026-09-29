@@ -14,9 +14,11 @@ Open **Chrome Settings → Morphe settings** to enable or disable:
 | Incognito address bar button | Switch between existing regular and private tabs; create a tab if the destination is empty. |
 | Black mode | Use `#000000` for dark neutral Chrome backgrounds, settings cards, suggested article cards and menus (including long-press menus). Controlled only from Morphe settings. Web page content and accent colors retain their own colors. |
 | True bottom address bar | Keep the address field at the bottom on new-tab pages and above the keyboard. Move the tab-view action row, mode selector, tab groups, menu and search field to the bottom. |
-| Open in Incognito by default | Use Incognito for the launcher and external HTTP(S) links that open the full browser. Embedded Custom Tabs keep their normal behavior. |
+| Remember last browsing mode | Reopen Chrome and external HTTP(S) links in the mode you last used: regular or Incognito. Embedded Custom Tabs keep their normal behavior. |
 
-The toolbar button, true bottom and Incognito default are initially enabled; Black mode is initially disabled.
+The toolbar button, true bottom and remembered mode are initially enabled; Black mode is initially disabled.
+Remembered mode replaces the former Incognito-default option and preserves its enabled/disabled choice on upgrade.
+It learns your mode when you leave Chrome or use the mode button. Before the first choice is saved, Chrome uses its native restored mode.
 Holding the toolbar mode button also opens Morphe settings. The settings entry remains available when the button is disabled.
 Chrome’s native Incognito authentication and new-tab button visibility rules are retained.
 
@@ -72,7 +74,7 @@ export GITHUB_ACTOR=your-github-login
 bash gradlew buildAndroid --no-daemon
 ```
 
-Bundle output: `patches/build/libs/patches-0.3.0.mpp`.
+Bundle output: `patches/build/libs/patches-0.4.0.mpp`.
 The local development helpers in `scripts/` also support the prepared JDK/SDK layout described in [development](docs/DEVELOPMENT.md).
 
 ## Project layout

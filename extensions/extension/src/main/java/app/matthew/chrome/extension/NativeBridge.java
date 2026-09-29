@@ -10,7 +10,8 @@ public final class NativeBridge {
     public static void selectModel(Activity activity, boolean incognito) { throw new IllegalStateException("Unpatched bridge"); }
     public static boolean newTab(Activity activity, int menuId) { throw new IllegalStateException("Unpatched bridge"); }
     public static boolean incognitoAllowed(Activity activity) { throw new IllegalStateException("Unpatched bridge"); }
-    public static boolean defaultFeatureEnabled() { return false; }
+    public static boolean rememberModeFeatureEnabled() { return false; }
+    public static boolean tabsReady(Activity activity) { throw new IllegalStateException("Unpatched bridge"); }
     public static void writeChromeInt(int value, String key) { throw new IllegalStateException("Unpatched bridge"); }
     public static int themeSetting() { return 0; }
     public static void setBottomPosition() { throw new IllegalStateException("Unpatched bridge"); }
