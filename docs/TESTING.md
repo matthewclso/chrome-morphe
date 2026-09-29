@@ -4,6 +4,36 @@ Target: Chrome 153.0.8010.53 (801005304), unrooted Galaxy S26 SM-S942U1, Android
 ARM64, 4096-byte pages, Gboard. Test package: `app.matthew.chrome.test`.
 Stock Chrome and the Samsung Internet default-browser role are not fixtures.
 
+## Tab picker, September 29, 2026
+
+Source 0.5.0 was developed and checked on the same S26, with final build v61 installed
+using the existing signing key. Its APK signature and 4 KB alignment pass.
+
+- The picker switch is disabled with True bottom off. Re-enabling True bottom restores its saved choice and the row.
+- Native favicons and a local fallback are shown beside ellipsized titles and individual close controls. The current tab has an inset blue outline, with no divider above the address bar; final-build regular-fixture screenshots verify the appearance.
+- Final v61 horizontal swipes scroll the row without switching the active page; tapping a tab still selects it. Explicit pressed/focused feedback removes the S26's extra selected-state underline.
+- Tab selection, automatic scrolling to newly selected tabs, closing active/inactive tabs, regular-tab Undo, and title/favicon changes were exercised with disposable fixtures during development.
+- Portrait and landscape checks on v59 show the row above the address bar with reserved page space. Address entry hides it in both orientations.
+- An early candidate removed the row height while Chrome temporarily hid its Android toolbar for compositor scrolling, leaving a captured row at the bottom. It was rejected. Final v61 screenshots confirm both bars disappear on downward scrolling and return on upward scrolling.
+- On v59, closing the final private tab through the picker leaves the empty Incognito viewer. A new private session has empty cookies and localStorage after writing and closing a disposable private marker through the picker.
+- On v59, the user enabled Chrome's native Incognito lock and confirmed the picker remains hidden until authentication. The subsequent v60/v61 changes only refine horizontal gesture dispatch and selection feedback.
+- On v59, a native Custom Tab has its ordinary close control and no picker or mode switch. Returning leaves the full-browser viewer intact.
+
+All fixture tabs are disposable; no account credentials are used. The tab-picker fixture
+at `tests/tab_picker_server.py` serves distinct tab titles/icons, title/icon updates, new-tab
+links and a long page with a bottom target on port 8766. Use ADB reverse for that port.
+Use `tests/storage_server.py` on port 8765 to repeat private-session cleanup. Restore rotation
+preferences and remove the test sender/ADB reverse rules after testing.
+
+Native group close confirmations are retained through TabRemover, but shared-group dialogs,
+very large tab collections and other devices were not exercised. Account sync and Android
+autofill hooks were not changed; their earlier acceptance below is not a fresh provider test.
+
+Tested patch bundle SHA-256:
+`3b4550d4af8991331495ab2d4d85d6fdc7a6858b15b21ade9eb206d4d4a7d0ea`.
+Device APK SHA-256:
+`0c49dd5afafc51a907ac815db4dfebbecd8409936f138a02541eb554bfbd19fa`.
+
 ## Remembered mode and empty Incognito viewer, September 29, 2026
 
 Source 0.4.0, final device build v54, was installed with the existing signing key.
