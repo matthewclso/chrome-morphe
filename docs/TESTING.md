@@ -4,14 +4,27 @@ Target: Chrome 153.0.8010.53 (801005304), unrooted Galaxy S26 SM-S942U1, Android
 ARM64, 4096-byte pages, Gboard. Test package: `app.matthew.chrome.test`.
 Stock Chrome and the Samsung Internet default-browser role are not fixtures.
 
-## Remembered-mode candidate, September 28, 2026
+## Remembered mode and empty Incognito viewer, September 29, 2026
 
-Source 0.4.0 replaces forced Incognito startup with the last-used mode for the
-launcher and full-browser HTTP(S) links. Candidate v48 builds and patches the
-exact target, passes signature and 4 KB alignment checks, and is installed with
-the existing signing key. Device behavior checks are pending a screen unlock;
-these build/install results do not establish startup or privacy acceptance.
-Manager metadata remains on the accepted 0.3.0 release until testing completes.
+Source 0.4.0, final device build v54, was installed with the existing signing key.
+The APK signature and 4 KB alignment pass. On the S26:
+
+- Closing the final private tab by its X, swiping it away, and **Close all Incognito tabs** each leave the private viewer selected with zero tabs.
+- The empty viewer's **New Incognito tab** control creates a private tab. Switching manually to the regular viewer and back remains possible.
+- A warm launcher reopen preserves the empty private viewer. Warm/cold reopening retains regular mode after a native regular-pane choice; cold reopening retains private mode after native **New Incognito tab**. Cold checks backgrounded the app fully before force-stopping it.
+- Full-browser links from the separate fixture app follow the last-used mode. After closing all private tabs, a new external link opens privately with empty cookie and localStorage values. Regular fixture storage remains separate.
+- Embedded Custom Tabs retain their regular storage and native controls, without changing the remembered full-browser mode.
+
+An early candidate retained private session storage and was discarded. The final
+patch retains the pane while destroying its coordinator. Shipped bytecode for
+native tab removal and model destruction matches the original APK; it does not
+keep a hidden tab or override private model lifetime. Native authentication is
+unchanged. This run did not repeat the earlier biometric/password-provider tests.
+
+Tested patch bundle SHA-256:
+`6fa32f1325c12c874986f1e47e9fdb0eb39d24d269aff4adf3d9e271256b49b1`.
+Device APK SHA-256:
+`9e310abe1cb58ba17fe1516e9220aeb792cbc7a7c988a8d97ca37f50f4ad7b9e`.
 
 ## Android autofill acceptance, September 28, 2026
 
@@ -162,6 +175,7 @@ Use disposable tabs only; do not close or inspect unrelated user tabs. Since sou
 8. Hold the mode button to open Morphe settings, disable **Remember last browsing mode**, and verify native launcher/external-link behavior. Restore the setting afterward.
 9. With remembered mode enabled, leave and reopen through the launcher in each mode, both warm and after a force-stop of Chrome Morphe. Repeat using a mode selection from the native tab view with the toolbar mode button hidden.
 10. Open a Custom Tab while full Chrome was last private, then reopen the full browser and confirm it still selects Incognito. Check authentication if private tabs are locked.
+11. Test final-tab closure by X, swipe and Close all, then create another private tab from the empty viewer. Confirm fresh storage. Clean up only the fixture markers through `/clear` and close only the disposable fixture tabs.
 
 Use `scripts/device_ui.py LABEL` for accessible UI evidence. `--tap` taps one exact matching test-app label and refuses ambiguous matches. `--serial` or `ANDROID_SERIAL` selects the phone when more than one device is connected.
 

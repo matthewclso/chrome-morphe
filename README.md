@@ -20,7 +20,8 @@ The toolbar button, true bottom and remembered mode are initially enabled; Black
 Remembered mode replaces the former Incognito-default option and preserves its enabled/disabled choice on upgrade.
 It learns your mode when you leave Chrome or use the mode button. Before the first choice is saved, Chrome uses its native restored mode.
 Holding the toolbar mode button also opens Morphe settings. The settings entry remains available when the button is disabled.
-Chrome’s native Incognito authentication and new-tab button visibility rules are retained.
+Closing the last Incognito tab in the tab viewer leaves an empty Incognito pane. You can open another private tab or switch to regular tabs yourself.
+Chrome’s native Incognito authentication and private-session cleanup are retained.
 
 ## Supported app
 

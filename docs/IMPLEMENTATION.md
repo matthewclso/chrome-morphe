@@ -32,6 +32,17 @@ Toolbar inflation is hooked immediately after the native super call: later R8 co
 jump straight to a return. Branch-target external-link instructions are replaced rather than inserting a skippable prefix.
 The button reads final model state before drawing; a disabled button uses GONE so the address field reclaims its width.
 
+Closing the last Incognito tab in the Hub retains the focused empty Incognito pane and its native new-tab control.
+Its coordinator is still destroyed, releasing the closed session's UI resources. Native tab removal, model selection,
+profile destruction and unfocused-pane cleanup remain intact. The empty pane does not retain a hidden tab or a live
+private tab model. Remembered mode reads the focused pane while the Hub is visible, and the current model otherwise.
+This separates the user's choice of empty pane from Chrome's session lifetime. The empty-pane behavior is independent
+of the remembered-launch-mode toggle.
+
+The exact-target [IncognitoTabSwitcherPane](https://github.com/chromium/chromium/blob/153.0.8010.53/chrome/android/features/tab_ui/java/src/org/chromium/chrome/browser/tasks/tab_management/IncognitoTabSwitcherPane.java)
+source explains pane cleanup. [ChromeNextTabPolicySupplier](https://github.com/chromium/chromium/blob/153.0.8010.53/chrome/android/java/src/org/chromium/chrome/browser/app/tabmodel/ChromeNextTabPolicySupplier.java)
+provides the native Hub-visible check. Shipped bytecode validates each hook; source names alone are not patch fingerprints.
+
 ## Bottom positioning
 
 The native toolbar controller retains its IME, tab-switcher and Find-in-page transitions. Runtime gates suppress its

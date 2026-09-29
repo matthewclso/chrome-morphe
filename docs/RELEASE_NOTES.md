@@ -1,6 +1,7 @@
 Chrome Morphe 0.4.0 for Chrome 153.0.8010.53 (801005304), ARM64.
 
 - Replace **Open in Incognito by default** with **Remember last browsing mode**. Leaving Chrome in regular mode reopens regular mode; leaving it in Incognito reopens Incognito.
+- Keep the tab viewer in Incognito after closing the last private tab, with an empty list and the native new-tab control. Closing tabs still ends their private session.
 - Full-browser HTTP(S) links from other apps use the same remembered mode. Embedded Custom Tabs retain their usual behavior and do not change the saved full-browser choice.
 - Preserve the old toggle's enabled/disabled choice on upgrade. Mode recording waits for Chrome to finish restoring tabs. Native Incognito availability checks, authentication and private-tab lifetime remain in force.
 
