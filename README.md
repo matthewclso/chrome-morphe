@@ -5,6 +5,8 @@
 
 Independent Android Chrome patches for use with [Morphe Manager](https://github.com/MorpheApp/morphe-manager).
 
+Feel free to open issues for feature requests, improvements, or bug reports.  Feel free to open PRs as well.
+
 ## Features
 
 Open **Chrome Settings → Morphe settings** to enable or disable:
