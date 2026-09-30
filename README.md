@@ -5,6 +5,8 @@
 
 Independent Android Chrome patches for use with [Morphe Manager](https://github.com/MorpheApp/morphe-manager).
 
+The [user-visible behavior contract](docs/BEHAVIOR_CONTRACT.md) is the authoritative product specification. It takes precedence over all other repository sources for intended behavior and records the owner's final decisions, preservation requirements, and regression checks.
+
 Feel free to open issues for feature requests, improvements, or bug reports.  Feel free to open PRs as well.
 
 ## Features

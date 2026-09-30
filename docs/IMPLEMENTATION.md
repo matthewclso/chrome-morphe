@@ -1,5 +1,7 @@
 # Implementation
 
+The [user-visible behavior contract](BEHAVIOR_CONTRACT.md) has higher authority than this implementation description. It defines the required outcomes; these notes describe the current approach and must not be used to justify a conflicting behavior.
+
 Target: original `com.android.chrome` 153.0.8010.53, version code 801005304, ARM64.
 The version gate runs inside each feature patch even if Morphe compatibility is forced. Stable strings locate host code;
 exact descriptors, call counts and resource IDs validate the supported artifact. These are not cross-version hooks.

@@ -1,5 +1,7 @@
 # Device acceptance
 
+The [user-visible behavior contract](BEHAVIOR_CONTRACT.md) defines the authoritative current requirements. This file records dated evidence, including superseded prototypes and limitations; historical results do not override that contract or prove a later build still works.
+
 Target: Chrome 153.0.8010.53 (801005304), unrooted Galaxy S26 SM-S942U1, Android 16/API 36,
 ARM64, 4096-byte pages, Gboard. Test package: `app.matthew.chrome.test`.
 Stock Chrome and the Samsung Internet default-browser role are not fixtures.
