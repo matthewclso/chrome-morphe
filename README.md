@@ -80,7 +80,7 @@ export GITHUB_ACTOR=your-github-login
 bash gradlew buildAndroid --no-daemon
 ```
 
-Bundle output: `patches/build/libs/patches-0.5.0.mpp`.
+Bundle output: `patches/build/libs/patches-0.5.1.mpp`.
 The local development helpers in `scripts/` also support the prepared JDK/SDK layout described in [development](docs/DEVELOPMENT.md).
 
 ## Project layout
